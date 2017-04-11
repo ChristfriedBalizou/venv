@@ -16,6 +16,10 @@ Plugin 'VundleVim/Vundle.vim'
 "
 
 Plugin 'altercation/vim-colors-solarized'
+" https://github.com/morhetz/gruvbox/wiki/Installation
+Plugin 'morhetz/gruvbox'
+Plugin 'sjl/badwolf'
+Plugin 'nanotech/jellybeans.vim'
 Plugin 'tomasr/molokai'
 Plugin 'bling/vim-airline'
 
