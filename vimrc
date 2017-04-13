@@ -41,6 +41,11 @@ Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'mattn/emmet-vim'
 Plugin 'elzr/vim-json'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'Yggdroot/indentLine'
+Plugin 'ervandew/supertab'
+Plugin 'Raimondi/delimitMate'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
@@ -49,6 +54,12 @@ Plugin 'elzr/vim-json'
 Plugin 'klen/python-mode'
 Plugin 'fs111/pydoc.vim'
 Plugin 'cburroughs/pep8.py'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM PYTHON
+"
+
+Plugin 'airblade/vim-rooter'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM MARKDOWN
@@ -226,6 +237,7 @@ set tm=500
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
+syntax on
 syntax enable
 
 " colorscheme desert
@@ -574,4 +586,16 @@ let g:tagbar_type_go = {
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
+
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<tab-t>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" IndentLine
+" vertical line indentation
+let g:indentLine_color_term = 239
+let g:indentLine_color_gui = '#cfcfc4'
+let g:indentLine_char = '│'
+
 
