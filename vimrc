@@ -21,7 +21,6 @@ Plugin 'morhetz/gruvbox'
 Plugin 'sjl/badwolf'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'tomasr/molokai'
-Plugin 'bling/vim-airline'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM TEXT EDITOR
@@ -45,7 +44,9 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Yggdroot/indentLine'
 Plugin 'ervandew/supertab'
-Plugin 'Raimondi/delimitMate'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
@@ -156,6 +157,11 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" mapleader Non-English keyboard
+" http://stackoverflow.com/questions/14226390/how-to-use-nerd-commenter-for-vim-how-to-use-leader-key
+let mapleader=","
+set timeout timeoutlen=1500
+
 " Sets how many lines of history VIM has to remember
 set history=700
 
@@ -242,14 +248,13 @@ syntax enable
 
 " colorscheme desert
 colorscheme solarized
-set background=dark
 
-" Set extra options when running in GUI mode
-if has('gui_running')
+if has("gui_running")
     set background=light
 else
     set background=dark
 endif
+
 " if has("gui_running")
 "     set guioptions-=T
 "     set guioptions+=e
@@ -587,15 +592,21 @@ let g:tagbar_type_go = {
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = ['<C-Space>', '<C-p>']
+
 " Ultisnips
-let g:UltiSnipsExpandTrigger="<tab-t>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsEditSplit="vertical"
 
-" IndentLine
-" vertical line indentation
-let g:indentLine_color_term = 239
-let g:indentLine_color_gui = '#cfcfc4'
-let g:indentLine_char = '│'
+" Java Eclim
+map ji :JavaImport<CR>
+map gs :JavaGetSet<CR>
+map ex :Java<CR>
 
-
+" Vim airline
+let g:airline#extensions#tabline#enabled = 1
