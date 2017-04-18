@@ -616,3 +616,6 @@ map ex :Java<CR>
 
 " Vim airline
 let g:airline#extensions#tabline#enabled = 1
+
+" Mouse
+set mouse = a
