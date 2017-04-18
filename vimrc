@@ -63,6 +63,12 @@ Plugin 'cburroughs/pep8.py'
 Plugin 'airblade/vim-rooter'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM XML
+"
+
+Plugin 'tpope/vim-ragtag'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM MARKDOWN
 "
 
