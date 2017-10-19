@@ -47,6 +47,7 @@ Plugin 'ervandew/supertab'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'perl-support.vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
@@ -57,9 +58,10 @@ Plugin 'fs111/pydoc.vim'
 Plugin 'cburroughs/pep8.py'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM PYTHON
+" VIM JAVA
 "
 
+Plugin 'vim-scripts/JavaDecompiler.vim'
 Plugin 'airblade/vim-rooter'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -96,6 +98,22 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'jez/vim-superman'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'mileszs/ack.vim'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM DATABASE 
+"
+
+" Plugin 'ChristfriedBalizou/vim-jeamsql'
+" Plugin 'vim-scripts/dbext.vim'
+" Plugin 'vim-scripts/SQLUtilities'
+Plugin 'vim-scripts/sql.vim--Stinson'
+" Plugin 'vim-scripts/SQLComplete.vim'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM CCL
+"
+
+Plugin 'nikolas/ccl.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -611,11 +629,22 @@ let g:UltiSnipsEditSplit="vertical"
 
 " Java Eclim
 map ji :JavaImport<CR>
+map <leader>d :JavaDocSearch -x declarations<CR>
+map <leader>sr :JavaSearchContext<CR>
 map gs :JavaGetSet<CR>
 map ex :Java<CR>
 
 " Vim airline
 let g:airline#extensions#tabline#enabled = 1
+
+" Maven
+map <leader>mc :!mvn clean -Dmaven.test.skip=true<cr>
+map <leader>mt :!mvn test<cr>
+map <leader>md :!mvn deploy -Dmaven.test.skip=true<cr>
+map <leader>mi :!mvn install -Dmaven.test.skip=true<cr>
+map <leader>mv :!mvn validate -Dmaven.test.skip=true<cr>
+map <leader>mx :!mvn compile -Dmaven.test.skip=true<cr>
+map <leader>mp :!mvn package -Dmaven.test.skip=true<cr>
 
 " Mouse
 set mouse = a
