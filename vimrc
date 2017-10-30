@@ -19,8 +19,11 @@ Plugin 'altercation/vim-colors-solarized'
 " https://github.com/morhetz/gruvbox/wiki/Installation
 Plugin 'morhetz/gruvbox'
 Plugin 'sjl/badwolf'
-Plugin 'nanotech/jellybeans.vim'
 Plugin 'tomasr/molokai'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'endel/vim-github-colorscheme'
+Plugin 'danilo-augusto/vim-afterglow'
+Plugin 'dracula/vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM TEXT EDITOR
@@ -271,13 +274,14 @@ syntax on
 syntax enable
 
 " colorscheme desert
-colorscheme solarized
+colorscheme dracula 
+set t_Co=256
 
-if has("gui_running")
-    set background=light
-else
-    set background=dark
-endif
+" if has("gui_running")
+"     set background=light
+" else
+"     set background=dark
+" endif
 
 " if has("gui_running")
 "     set guioptions-=T
@@ -588,7 +592,8 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " ---------------------- Nerd tree toogle --------------------------
 " " NERDTree map key
-map <C-T> :NERDTreeToggle <CR>
+map <F3> :NERDTreeToggle <CR>
+let g:NERDTreeMouseMode = 2
 
 " ------------------------- Tagbar -------------------------------
 nmap <silent> <F4> :TagbarToggle<CR>
