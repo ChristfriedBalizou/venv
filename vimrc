@@ -50,6 +50,15 @@ Plugin 'ervandew/supertab'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'Shougo/unite.vim'
+Plugin 'mhartington/vim-typings'
+Plugin 'Quramy/vim-dtsm'
+Plugin 'prettier/prettier'
+Plugin 'Yggdroot/indentLine'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-scripts/a.vim'
 Plugin 'perl-support.vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -59,13 +68,11 @@ Plugin 'perl-support.vim'
 Plugin 'klen/python-mode'
 Plugin 'fs111/pydoc.vim'
 Plugin 'cburroughs/pep8.py'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM JAVA
-"
-
-Plugin 'vim-scripts/JavaDecompiler.vim'
-Plugin 'airblade/vim-rooter'
+Plugin 'alfredodeza/pytest.vim'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'nvie/vim-flake8'
+Plugin 'klen/python-mode'
+Plugin 'Vimjas/vim-python-pep8-indent'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM XML
@@ -74,49 +81,30 @@ Plugin 'airblade/vim-rooter'
 Plugin 'tpope/vim-ragtag'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM MARKDOWN
-"
-
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM GIT 
+" VIM GIT
 "
 
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM TEXT EDITING 
+" VIM JAVSCRIPT | JSON | TYPESCRIPT 
 "
 
-Plugin 'Raimondi/delimitMate'
-Plugin 'easymotion/vim-easymotion'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'jason0x43/vim-js-indent'
+Plugin 'Quramy/vim-js-pretty-template'
+Plugin 'pangloss/vim-javascript'
+Plugin 'elzr/vim-json'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM MAN PAGES, TMUX 
 "
 
-Plugin 'jez/vim-superman'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'mileszs/ack.vim'
+Plugin 'Raimondi/delimitMate'
+Plugin 'easymotion/vim-easymotion'
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM DATABASE 
-"
-
-" Plugin 'ChristfriedBalizou/vim-jeamsql'
-" Plugin 'vim-scripts/dbext.vim'
-" Plugin 'vim-scripts/SQLUtilities'
-Plugin 'vim-scripts/sql.vim--Stinson'
-" Plugin 'vim-scripts/SQLComplete.vim'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM CCL
-"
-
-Plugin 'nikolas/ccl.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -239,7 +227,7 @@ set whichwrap+=<,>,h,l
 " Ignore case when searching
 set ignorecase
 
-" When searching try to be smart about cases 
+" When searching try to be smart about cases
 set smartcase
 
 " Highlight search results
@@ -265,6 +253,20 @@ set novisualbell
 set t_vb=
 set tm=500
 
+" Set ctags configuration
+" set autochdir
+" map <A-Left> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+" map <A-Right> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+" map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+" map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+set tags+=./tags;
+nnoremap <silent> <Leader>b :TagbarToggle<CR>
+nnoremap <leader>. :CtrlPTag<cr>
+
+autocmd BufWritePost *
+    \ if filereadable('tags') |
+    \   call system('ctags -a '.expand('%')) |
+    \ endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -277,11 +279,11 @@ syntax enable
 colorscheme dracula 
 set t_Co=256
 
-" if has("gui_running")
-"     set background=light
-" else
-"     set background=dark
-" endif
+if has("gui_running")
+    set background=light
+else
+    set background=dark
+endif
 
 " if has("gui_running")
 "     set guioptions-=T
@@ -301,9 +303,9 @@ set ffs=unix,dos,mac
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
+" set nobackup
+" set nowb
+" set noswapfile
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -321,7 +323,7 @@ set tabstop=4
 
 " Linebreak on 500 characters
 set lbr
-set tw=500
+set tw=80
 
 set ai "Auto indent
 set si "Smart indent
@@ -590,6 +592,9 @@ let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
+" Enable NERDCommenterToggle to check all selected lines is commented or not 
+let g:NERDToggleCheckAllLines = 1
+
 " ---------------------- Nerd tree toogle --------------------------
 " " NERDTree map key
 map <F3> :NERDTreeToggle <CR>
@@ -632,24 +637,18 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsEditSplit="vertical"
 
-" Java Eclim
-map ji :JavaImport<CR>
-map <leader>d :JavaDocSearch -x declarations<CR>
-map <leader>sr :JavaSearchContext<CR>
-map gs :JavaGetSet<CR>
-map ex :Java<CR>
 
 " Vim airline
 let g:airline#extensions#tabline#enabled = 1
 
-" Maven
-map <leader>mc :!mvn clean -Dmaven.test.skip=true<cr>
-map <leader>mt :!mvn test<cr>
-map <leader>md :!mvn deploy -Dmaven.test.skip=true<cr>
-map <leader>mi :!mvn install -Dmaven.test.skip=true<cr>
-map <leader>mv :!mvn validate -Dmaven.test.skip=true<cr>
-map <leader>mx :!mvn compile -Dmaven.test.skip=true<cr>
-map <leader>mp :!mvn package -Dmaven.test.skip=true<cr>
+autocmd FileType javascript set formatprg=prettier\ --stdin
+
+" IndentLine
+" set list listchars=tab:>-,trail:.,extends:>
+" set listchars=space:.
+let g:indentLine_leadingSpaceEnabled = 1
+:nnoremap <Leader>il :IndentLinesToggle<CR>
+:nnoremap <Leader>ls :LeadingSpaceToggle<CR>
 
 " Mouse
 set mouse = a
