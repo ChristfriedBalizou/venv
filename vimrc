@@ -43,29 +43,23 @@ Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'mattn/emmet-vim'
 Plugin 'elzr/vim-json'
-Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Yggdroot/indentLine'
 Plugin 'ervandew/supertab'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'vim-syntastic/syntastic'
 Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'Shougo/unite.vim'
 Plugin 'mhartington/vim-typings'
 Plugin 'Quramy/vim-dtsm'
 Plugin 'prettier/prettier'
-Plugin 'Yggdroot/indentLine'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'vim-scripts/a.vim'
 Plugin 'perl-support.vim'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
 "
 
-Plugin 'klen/python-mode'
 Plugin 'fs111/pydoc.vim'
 Plugin 'cburroughs/pep8.py'
 Plugin 'alfredodeza/pytest.vim'
@@ -96,7 +90,6 @@ Plugin 'leafgarland/typescript-vim'
 Plugin 'jason0x43/vim-js-indent'
 Plugin 'Quramy/vim-js-pretty-template'
 Plugin 'pangloss/vim-javascript'
-Plugin 'elzr/vim-json'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM MAN PAGES, TMUX 
@@ -626,18 +619,6 @@ let g:tagbar_type_go = {
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
-" make YCM compatible with UltiSnips (using supertab)
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = ['<C-Space>', '<C-p>']
-
-" Ultisnips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-let g:UltiSnipsEditSplit="vertical"
-
-
 " Vim airline
 let g:airline#extensions#tabline#enabled = 1
 
@@ -649,6 +630,3 @@ autocmd FileType javascript set formatprg=prettier\ --stdin
 let g:indentLine_leadingSpaceEnabled = 1
 :nnoremap <Leader>il :IndentLinesToggle<CR>
 :nnoremap <Leader>ls :LeadingSpaceToggle<CR>
-
-" Mouse
-set mouse = a
