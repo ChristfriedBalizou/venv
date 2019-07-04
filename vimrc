@@ -28,7 +28,7 @@ Plugin 'dracula/vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM TEXT EDITOR
 "
-
+Plugin 'chrisbra/csv.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -40,7 +40,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 Plugin 'mattn/emmet-vim'
 Plugin 'elzr/vim-json'
 Plugin 'honza/vim-snippets'
@@ -53,18 +53,20 @@ Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'Shougo/unite.vim'
 Plugin 'mhartington/vim-typings'
 Plugin 'Quramy/vim-dtsm'
-Plugin 'prettier/prettier'
+" Plugin 'prettier/prettier'
 Plugin 'perl-support.vim'
+Plugin 'ambv/black'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
 "
-
+Plugin 'davidhalter/jedi-vim'
 Plugin 'fs111/pydoc.vim'
 Plugin 'cburroughs/pep8.py'
 Plugin 'alfredodeza/pytest.vim'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nvie/vim-flake8'
+" Plugin 'python-mode/python-mode', {'for': 'python', 'branch': 'develop'}
 Plugin 'klen/python-mode'
 Plugin 'Vimjas/vim-python-pep8-indent'
 
@@ -90,6 +92,9 @@ Plugin 'leafgarland/typescript-vim'
 Plugin 'jason0x43/vim-js-indent'
 Plugin 'Quramy/vim-js-pretty-template'
 Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
+Plugin 'w0rp/ale'
+Plugin 'prettier/vim-prettier', {'do': 'npm install'}
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM MAN PAGES, TMUX 
@@ -476,6 +481,7 @@ map <leader>p :cp<cr>
 " => Spell checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Pressing ,ss will toggle and untoggle spell checking
+set spell
 map <leader>ss :setlocal spell!<cr>
 
 " Shortcuts using <leader>
@@ -497,7 +503,11 @@ map <leader>q :e ~/buffer<cr>
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Debugger 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable default vim 8+ termdebug
+packadd termdebug
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
@@ -630,3 +640,37 @@ autocmd FileType javascript set formatprg=prettier\ --stdin
 let g:indentLine_leadingSpaceEnabled = 1
 :nnoremap <Leader>il :IndentLinesToggle<CR>
 :nnoremap <Leader>ls :LeadingSpaceToggle<CR>
+
+" " Pymode
+" " Turn on the whole plugin
+" let g:pymode = 1
+" " to support python3
+" let g:pymode_python = 'python3'
+" " Trim unused white spaces on save
+" let g:pymode_trim_whitespaces = 1
+" " Enable pymode indentation
+" let g:pymode_indent = 1
+" " Enable pymode folding
+" let g:pymode_folding = 0
+" " Enable automatic virtualenv detection
+" let g:pymode_virtualenv = 1
+" " Turn on the run code script
+" let g:pymode_run = 1
+" " Enable breakpoints functionality
+" let g:pymode_breakpoint = 1
+" let g:pymode_breakpoint_bind = '<leader>b'
+" " Disable code checking
+" let g:pymode_lint = 0
+
+
+" Insert Emmet configuration
+let g:user_emmet_leader_key=';'
+let g:user_emmet_mode='a'    "enable all function in all mode.
+let g:user_emmet_settings = {
+  \  'javascript.jsx' : {
+    \      'extends' : 'jsx',
+    \  },
+  \}
+
+" Black configuration
+let g:black_linelength=80
