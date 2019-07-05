@@ -66,6 +66,7 @@ Plugin 'cburroughs/pep8.py'
 Plugin 'alfredodeza/pytest.vim'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nvie/vim-flake8'
+Plugin 'jmcomets/vim-pony'
 " Plugin 'python-mode/python-mode', {'for': 'python', 'branch': 'develop'}
 Plugin 'klen/python-mode'
 Plugin 'Vimjas/vim-python-pep8-indent'
