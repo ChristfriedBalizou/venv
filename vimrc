@@ -646,7 +646,7 @@ let g:indentLine_leadingSpaceEnabled = 1
 " " Turn on the whole plugin
 " let g:pymode = 1
 " " to support python3
-" let g:pymode_python = 'python3'
+let g:pymode_python = 'python3'
 " " Trim unused white spaces on save
 " let g:pymode_trim_whitespaces = 1
 " " Enable pymode indentation
