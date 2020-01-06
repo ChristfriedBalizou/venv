@@ -5,4 +5,7 @@ Note that I've been inspired by other vimrc files around the web but alswo have 
 
 ### Note
 
-It is important to know that I am compiling my own vim with python3+ support. You can follow this [tutorial](https://github.com/ycm-core/YouCompleteMe/wiki/Building-Vim-from-source) which is very clear than any TLDR I can write.
+~~It is important to know that I am compiling my own vim with python3+ support. You can follow this [tutorial](https://github.com/ycm-core/YouCompleteMe/wiki/Building-Vim-from-source) which is very clear than any TLDR I can write.~~
+
+Use [vim-now](https://packages.debian.org/buster/vim-nox) instead of compiling your own vim.
+> Vim-nox contains a version of vim compiled with support for scripting with Lua, Perl, Python 3, Ruby, and Tcl but no GUI.
