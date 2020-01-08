@@ -66,6 +66,23 @@ alias j='jobs -l'
 alias which='type -a'
 alias ..='cd ..'
 
+# Git directory accessibility aliases
+alias cdg='cd $HOME/src/github.com'   # Go to user github directory
+alias cds='cd $HOME/src'    # Go to source directory
+alias cdt='cd $HOME/src/tools'   # Access tools directory
+alias cdd='cd $HOME/src/data'   # Access data directory
+alias cdo=user_github_organization   # Go to github organization
+
+# Go to git organization
+# Git should be located under /home/{user}/src/github
+user_github_organization() {
+    if [ $# -gt 0 ]; then
+        cdg && cd $1
+    else
+        cdg
+    fi
+}
+
 # Pretty-print of some PATH variables:
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
