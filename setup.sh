@@ -72,6 +72,13 @@ fi
 # Install vim plugins
 vim +PluginInstall +qall
 
+
+# *************************************
+# Finalize YouCompleteMe installation
+# *************************************
+cd $HOME/.vim/bundle/YouCompleteMe
+python3 install.py --all
+
 clear
 echo "********************************************"
 echo "* All done, You are good to go."
