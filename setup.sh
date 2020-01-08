@@ -46,16 +46,16 @@ mkdir -p $HOME/src/data
 GIT_DIRECTORY="$HOME/src/github.com"
 
 # vundle
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2> /dev/null
 
 # venv.git
 VENV_DIRECTORY="$GIT_DIRECTORY/ChristfriedBalizou/venv.git"
-git clone https://github.com/ChristfriedBalizou/venv.git $VENV_DIRECTORY
+git clone https://github.com/ChristfriedBalizou/venv.git $VENV_DIRECTORY 2> /dev/null
 
 if [ ! -f $HOME/.fzf.bash ]; then
     # Install Quick fuzzy "fzf"
     FUZZY_DIRECTORY="$GIT_DIRECTORY/junegunn/fzf.git"
-    git clone --depth 1 https://github.com/junegunn/fzf.git $GIT_DIRECTORY/junegunn/fzf.git
+    git clone --depth 1 https://github.com/junegunn/fzf.git $GIT_DIRECTORY/junegunn/fzf.git 2> /dev/null
     bash $FUZZY_DIRECTORY/install
 fi
 
