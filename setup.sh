@@ -52,10 +52,12 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 VENV_DIRECTORY="$GIT_DIRECTORY/ChristfriedBalizou/venv.git"
 git clone https://github.com/ChristfriedBalizou/venv.git $VENV_DIRECTORY
 
-# Install Quick fuzzy "fzf"
-FUZZY_DIRECTORY="$GIT_DIRECTORY/junegunn/fzf.git"
-git clone --depth 1 https://github.com/junegunn/fzf.git $GIT_DIRECTORY/junegunn/fzf.git
-bash $FUZZY_DIRECTORY/install
+if [ ! -f $HOME/.fzf.bash ]; then
+    # Install Quick fuzzy "fzf"
+    FUZZY_DIRECTORY="$GIT_DIRECTORY/junegunn/fzf.git"
+    git clone --depth 1 https://github.com/junegunn/fzf.git $GIT_DIRECTORY/junegunn/fzf.git
+    bash $FUZZY_DIRECTORY/install
+fi
 
 # Configure symlinks
 ln -sf $VENV_DIRECTORY/vimrc $HOME/.vimrc
