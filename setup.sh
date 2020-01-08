@@ -5,6 +5,7 @@
 # requirement to get starting with development:
 #   - Install git
 #   - Install vim-nox
+#   - Install golang ( because we loving it :-) )
 #   - Create mandatory directories (github, src, data, tools, ...)
 #   - Install vundle for vim plugin
 #   - Pull venv and install vimrc and bashrc
@@ -39,6 +40,15 @@ mkdir -p $HOME/src/tools
 # /src/data
 mkdir -p $HOME/src/data
 
+# *************************************
+# Install Golang environment
+# *************************************
+if [ ! -d /usr/local/go ]; then
+    wget https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
+    tar -xvf go1.13.3.linux-amd64.tar.gz
+    rm -f go1.13.3.linux-amd64.tar.gz
+    sudo mv go /usr/local
+fi
 
 # *************************************
 # Install vim environment and plugins

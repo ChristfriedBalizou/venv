@@ -105,6 +105,11 @@ if [ -f $HOME/.bash_aliases ]; then
     . $HOME/.bash_aliases
 fi
 
+# setup golang environment path
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/src/github.com
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
