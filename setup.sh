@@ -16,7 +16,7 @@ set -u
 # *************************************
 # Install System requirements
 # *************************************
-sudo apt-get --yes install git tig vim-nox exuberant-ctags python-pip python3-pip
+sudo apt-get --yes install git tig vim-nox exuberant-ctags cmake python-pip python3-pip
 
 # *************************************
 # Install python requirements
