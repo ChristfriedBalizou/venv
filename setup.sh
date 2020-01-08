@@ -91,7 +91,6 @@ vim +PluginInstall +qall
 cd $HOME/.vim/bundle/YouCompleteMe
 python3 install.py --all
 
-clear
 echo "********************************************"
 echo "* All done, You are good to go."
 echo "********************************************"
