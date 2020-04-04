@@ -60,12 +60,7 @@ Plugin 'ambv/black'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
 "
-Plugin 'davidhalter/jedi-vim'
-Plugin 'fs111/pydoc.vim'
-Plugin 'cburroughs/pep8.py'
-Plugin 'alfredodeza/pytest.vim'
-Plugin 'nvie/vim-flake8'
-Plugin 'klen/python-mode'
+Plugin 'python-mode/python-mode'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM XML
@@ -643,22 +638,6 @@ let g:indentLine_leadingSpaceEnabled = 1
 let g:pymode = 1
 " to support python3
 let g:pymode_python = 'python3'
-" Trim unused white spaces on save
-let g:pymode_trim_whitespaces = 1
-" Enable pymode indentation
-let g:pymode_indent = 1
-" Enable pymode folding
-let g:pymode_folding = 0
-" Enable automatic virtualenv detection
-let g:pymode_virtualenv = 1
-" Turn on the run code script
-let g:pymode_run = 1
-" Enable breakpoints functionality
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_bind = '<leader>b'
-" Disable code checking
-let g:pymode_lint = 0
-
 
 " Insert Emmet configuration
 let g:user_emmet_leader_key=';'
