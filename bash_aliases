@@ -146,9 +146,12 @@ alias moer='more'
 alias moew='more'
 alias kk='ll'
 
+
+
 #-------------------------------------------------------------
 # A few fun ones
 #-------------------------------------------------------------
+alias please='sudo'
 
 # Adds some text in the terminal frame (if applicable).
 
