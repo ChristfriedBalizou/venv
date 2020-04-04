@@ -56,11 +56,13 @@ Plugin 'Quramy/vim-dtsm'
 " Plugin 'prettier/prettier'
 Plugin 'perl-support.vim'
 Plugin 'ambv/black'
+Plugin 'Konfekt/FastFold'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
 "
 Plugin 'python-mode/python-mode'
+Plugin 'tmhedberg/SimpylFold'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM XML
@@ -636,8 +638,7 @@ let g:indentLine_leadingSpaceEnabled = 1
 " Pymode
 " Turn on the whole plugin
 let g:pymode = 1
-" to support python3
-let g:pymode_python = 'python3'
+let g:pymode_folding = 0
 
 " Insert Emmet configuration
 let g:user_emmet_leader_key=';'
