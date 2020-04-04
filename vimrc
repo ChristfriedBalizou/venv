@@ -61,6 +61,7 @@ Plugin 'Konfekt/FastFold'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VIM PYTHON
 "
+Plugin 'davidhalter/jedi-vim'
 Plugin 'python-mode/python-mode'
 Plugin 'tmhedberg/SimpylFold'
 
@@ -648,6 +649,9 @@ let g:user_emmet_settings = {
     \      'extends' : 'jsx',
     \  },
   \}
+
+" Jedi 
+let g:jedi#completions_enabled = 0
 
 " Black configuration
 let g:black_linelength=80
