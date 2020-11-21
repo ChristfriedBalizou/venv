@@ -14,7 +14,8 @@ SETUP_REQUIRES = (
 INSTALL_REQUIRES = (
     "wheel >= 0.34.2",
     "GitPython == 3.1.11",
-    "black",
+    "black == 20.8b1",
+    "click == 7.1.2",
 )
 
 TESTS_REQUIRES = (
