@@ -13,6 +13,8 @@ SETUP_REQUIRES = (
 
 INSTALL_REQUIRES = (
     "wheel >= 0.34.2",
+    "GitPython == 3.1.11",
+    "black",
 )
 
 TESTS_REQUIRES = (
