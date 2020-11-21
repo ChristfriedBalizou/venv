@@ -16,9 +16,8 @@ The listed function aim to install and setup:
     - Setup your bashrc and profile
 """
 import os
+import pwd
 import shutil
-import getpass
-from typing import List
 from subprocess import PIPE, check_output
 
 from git import Repo
@@ -28,6 +27,14 @@ import commons as utils
 
 
 BASE_DIRECTORY = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+
+VIMRC_DIRECORY = os.path.join("/", "opt", "vimrc.runtime")
+
+DIRECTORIES = (
+    os.path.join("src", "data"),
+    os.path.join("src", "tools"),
+    os.path.join("src", "github.com"),
+)  # Workspace directories
 
 PACKAGES = (
     "git",
@@ -49,26 +56,28 @@ PLUGINS = (
 
 
 @utils.crash_false
-def create_directory(directory, user=getpass.getuser()) -> bool:
+def create_directory(base: str, username: str) -> bool:
     """Will create a given directory
-    and chown the given user if not None
-    Otherwise to the user running this
-    script
+    and chown the given username.
 
     Arguments:
-        directory: a directory path
-        user: user to chown the directory too
+        base: a directory path
+        username: user to chown the directory too
 
     Return:
         boolean True if "OK" False if not
     """
-    os.makedirs(directory, exist_ok=True)
-    shutil.chown(directory, user=user)
+    for directory in DIRECTORIES:
+        path = os.path.join(base, directory)
+
+        os.makedirs(path, exist_ok=True)
+        shutil.chown(path, user=username)
+
     return True
 
 
 @utils.crash_traceback
-def vim(directory: str, users: List[str]) -> None:
+def vim(vimrc: str, user: str) -> None:
     """This function goal is to configure vim
     and setup our vim as an IDE.
 
@@ -80,14 +89,14 @@ def vim(directory: str, users: List[str]) -> None:
     3- Move configs.vim to destination/my_configs.vim
 
     Arguments:
-        directory: Directory where all vim configuration will
-                   move to. This is useful to cross use the same
-                   configuration for all users.
+        vimrc: Directory where all vim configuration will
+               move to. This is useful to cross use the same
+               configuration for all users.
+        user: User getting the profile configuration
+
     Return:
         void
     """
-    vimrc = os.path.join(directory, "vimrc.runtime")
-
     if not os.path.exists(vimrc):
         Repo.clone_from(
             "https://github.com/amix/vimrc.git",
@@ -113,37 +122,30 @@ def vim(directory: str, users: List[str]) -> None:
     )
 
     command = (
-        "bash",
+        shutil.which("bash"),
         os.path.join(vimrc, "install_awesome_parameterized.sh"),
         vimrc,
-        *users
+        user
     )
 
     check_output(command, universal_newlines=True, stderr=PIPE)
 
 
 @utils.crash_false
-def profile(users: List[str]) -> bool:
+def profile(user: pwd.struct_passwd) -> bool:
     """This function will apply the same profile(bashrc)
     shortcuts and function.
 
     Arguments:
-        users: List of users getting the profile configuration
+        user: User getting the profile configuration
 
     Return:
         True is everything went fine otherwise False
     """
-    home = os.path.join("/", "home")
+    for bash in ("bashrc", "bash_aliases"):
+        bashfile = os.path.join(user.pw_dir, f".{bash}")
 
-    for user in users:
-
-        if not os.path.exists(os.path.join(home, user)):
-            continue
-
-        for bash in ("bashrc", "bash_aliases"):
-            bashfile = os.path.join(home, user, f".{bash}")
-
-            shutil.copy(os.path.join(BASE_DIRECTORY, "venv", bash), bashfile)
-            shutil.chown(bashfile, user=user)
+        shutil.copy(os.path.join(BASE_DIRECTORY, "venv", bash), bashfile)
+        shutil.chown(bashfile, user=user.pw_name)
 
     return system.install(system.PackageQuery(name="fzf")) is None

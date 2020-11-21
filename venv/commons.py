@@ -3,6 +3,18 @@
 import sys
 import contextlib
 import traceback
+import pwd
+
+
+def real_users():
+    """Get all user with /home or /root
+    as directory
+    """
+    return [
+        user.pw_name
+        for user in pwd.getpwall()
+        if any(user.pw_dir.startswith(path) for path in ("/home", "/root"))
+    ]
 
 
 def crash_false(func):
