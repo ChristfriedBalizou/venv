@@ -1,0 +1,3 @@
+include venv/bashrc
+include venv/bash_aliases
+include venv/configs.vim
