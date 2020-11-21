@@ -28,7 +28,7 @@ import commons as utils
 
 BASE_DIRECTORY = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
-VIMRC_DIRECORY = os.path.join("/", "opt", "vimrc.runtime")
+VIMRC_DIRECTORY = os.path.join("/", "opt", "vimrc.runtime")
 
 DIRECTORIES = (
     os.path.join("src", "data"),
