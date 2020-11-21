@@ -28,19 +28,21 @@ def cli():
 @click.option(
     "-p",
     "--path",
+    type=click.Path(),
     default=local.VIMRC_DIRECTORY,
     show_default=True,
-    help="Shared vimrc directory"
+    help="Shared directory"
 )
 @click.option(
     "-r",
     "--requirements",
     default=local.PACKAGES,
     show_default=True,
+    multiple=True,
     help="System packages"
 )
 def local_environment(path, users, requirements):
-    """CLI installing local environment
+    """Configure and setup profile and vim as your IDE.
     """
 
     for username in users:
