@@ -36,7 +36,7 @@ def cli():
 @click.option(
     "-r",
     "--requirements",
-    default=local.PACKAGES,
+    default=list(local.PACKAGES),  # Documentation lied. Click==7.0
     show_default=True,
     multiple=True,
     help="System packages"
