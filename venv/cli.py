@@ -5,7 +5,7 @@ import pwd
 import sys
 import click
 
-import local  # pylint: disable=import-error
+import development  # pylint: disable=import-error
 import system  # pylint: disable=import-error
 import commons as utils  # pylint: disable=import-error
 
@@ -34,9 +34,7 @@ def profile(users):
     """
     for username in users:
         user = pwd.getpwnam(username)
-
-        # setup profile
-        assert local.profile(user) is True, f"{username} configuration failed."
+        assert development.profile(user) is True, f"{username} profile failed."
 
 
 @click.command("vim")
@@ -44,7 +42,7 @@ def profile(users):
     "-p",
     "--path",
     type=click.Path(),
-    default=local.VIMRC_DIRECTORY,
+    default=development.VIMRC_DIRECTORY,
     show_default=True,
     help="Shared directory"
 )
@@ -59,7 +57,7 @@ def profile(users):
 @click.option(
     "-d",
     "--dependencies",
-    default=list(local.PACKAGES),  # Documentation lied. Click==7.0
+    default=list(development.PACKAGES),  # Documentation lied. Click==7.0
     show_default=True,
     multiple=True,
     help="System packages"
@@ -72,7 +70,7 @@ def vim(path, users, dependencies):
         user = pwd.getpwnam(username)
 
         # Create directories
-        local.directories(user.pw_dir, username)
+        development.directories(user.pw_dir, username)
 
         # Install system required packages
         errors = system.install_packages(requirements)
@@ -80,8 +78,8 @@ def vim(path, users, dependencies):
             print(repr(errors), file=sys.stderr)
             sys.exit(1)
 
-        # setup vim
-        local.vim(path, username)
+        development.vim(path, username)
+
 
 developer.add_command(profile)
 developer.add_command(vim)
