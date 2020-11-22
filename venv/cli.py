@@ -11,12 +11,14 @@ import commons as utils  # pylint: disable=import-error
 
 
 @click.group()
-def cli():
-    """main interface
+def developer():
+    """Setup developer configuration:
+    - Profile
+    - Vim
     """
 
 
-@click.command("local")
+@click.command("profile")
 @click.option(
     "-u",
     "--users",
@@ -25,6 +27,19 @@ def cli():
     multiple=True,
     help="Username list"
 )
+def profile(users):
+    """Configure user(s) profile with defaut base
+    - bashrc
+    - bash_aliases
+    """
+    for username in users:
+        user = pwd.getpwnam(username)
+
+        # setup profile
+        assert local.profile(user) is True, f"{username} configuration failed."
+
+
+@click.command("vim")
 @click.option(
     "-p",
     "--path",
@@ -34,15 +49,23 @@ def cli():
     help="Shared directory"
 )
 @click.option(
-    "-r",
-    "--requirements",
+    "-u",
+    "--users",
+    default=utils.real_users(),
+    show_default=utils.real_users(),
+    multiple=True,
+    help="Username list"
+)
+@click.option(
+    "-d",
+    "--dependencies",
     default=list(local.PACKAGES),  # Documentation lied. Click==7.0
     show_default=True,
     multiple=True,
     help="System packages"
 )
-def local_environment(path, users, requirements):
-    """Configure and setup profile and vim as your IDE.
+def vim(path, users, dependencies):
+    """Configure VI(M) as your IDE.
     """
 
     for username in users:
@@ -60,8 +83,5 @@ def local_environment(path, users, requirements):
         # setup vim
         local.vim(path, username)
 
-        # setup profile
-        local.profile(user)
-
-
-cli.add_command(local_environment)
+developer.add_command(profile)
+developer.add_command(vim)
