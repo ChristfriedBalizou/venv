@@ -34,7 +34,7 @@ class PackageQuery: # pylint: disable=too-few-public-methods
     request
     """
     name: str
-    fmt: str = "${Status}\n"
+    fmt: str = "${Status}"
 
     @property
     def as_dict(self) -> Dict:

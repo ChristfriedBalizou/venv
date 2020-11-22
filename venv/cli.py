@@ -34,6 +34,7 @@ def profile(users):
     """
     for username in users:
         user = pwd.getpwnam(username)
+        assert development.create_directory(user.pw_dir, username) is True
         assert development.profile(user) is True, f"{username} profile failed."
 
 
@@ -68,9 +69,6 @@ def vim(path, users, dependencies):
 
     for username in users:
         user = pwd.getpwnam(username)
-
-        # Create directories
-        development.directories(user.pw_dir, username)
 
         # Install system required packages
         errors = system.install_packages(requirements)
