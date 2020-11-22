@@ -12,6 +12,7 @@ The workflow is at follow:
     - Status (Check installation status)
 """
 from typing import List, Union, Dict
+from dataclasses import dataclass, field
 from subprocess import CalledProcessError, check_output, PIPE
 
 
@@ -27,6 +28,7 @@ COMMANDES = (
 )  # commands to perform on each package
 
 
+@dataclass
 class PackageQuery: # pylint: disable=too-few-public-methods
     """A class use to formulate an installation
     request
@@ -44,12 +46,12 @@ class PackageQuery: # pylint: disable=too-few-public-methods
         }
 
 
+@dataclass
 class InstallationErrors:
     """This class store a collection of installation
     errors accuring installing multiple packages
     """
-    def __init__(self):
-        self.errors: List[CalledProcessError] = []
+    errors: List[CalledProcessError] = field(default_factory=list)
 
     def push(self, error: CalledProcessError) -> None:
         """Append to error list if error is not None
