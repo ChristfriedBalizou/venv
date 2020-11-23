@@ -115,7 +115,7 @@ def vim(vimrc: str, user: str) -> None:
             continue
 
         print(f"Cloning plugin {name} repo.", file=sys.stdout)
-        Repo.clone_from(plugin, destination, depth=1)
+        Repo.clone_from(plugin, destination, depth=1, recurse_submodules=True)
 
     shutil.copy(
         os.path.join(BASE_DIRECTORY, "venv", "configs.vim"),
