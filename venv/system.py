@@ -11,6 +11,7 @@ The workflow is at follow:
     - Checksums (Verify integrity)
     - Status (Check installation status)
 """
+import sys
 from typing import List, Union, Dict
 from dataclasses import dataclass, field
 from subprocess import CalledProcessError, check_output, PIPE
@@ -82,6 +83,8 @@ def install(query: PackageQuery) -> Union[CalledProcessError, None]:
         CalledProcessError if an error occure otherwise None
     """
 
+    print(f"Installing package: {query.name}", file=sys.stdout)
+
     for command in COMMANDES:
         try:
             check_output(
@@ -92,6 +95,7 @@ def install(query: PackageQuery) -> Union[CalledProcessError, None]:
         except CalledProcessError as error:
             # YOLO I want to return instead of raise
             # to be able to use the instance after
+            print(f"{query.name} Installation failed", file=sys.stderr)
             return error
 
     return None

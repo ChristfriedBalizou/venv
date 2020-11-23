@@ -16,6 +16,7 @@ The listed function aim to install and setup:
     - Setup your bashrc and profile
 """
 import os
+import sys
 import pwd
 import shutil
 from subprocess import PIPE, check_output
@@ -98,6 +99,7 @@ def vim(vimrc: str, user: str) -> None:
         void
     """
     if not os.path.exists(vimrc):
+        print("Cloning vimrc.git repo.", file=sys.stdout)
         Repo.clone_from(
             "https://github.com/amix/vimrc.git",
             vimrc,
@@ -105,15 +107,14 @@ def vim(vimrc: str, user: str) -> None:
         )  # Clone base vimrc config from amix
 
     for plugin in PLUGINS:
-        destination = os.path.join(
-            vimrc,
-            "my_plugins",
-            os.path.basename(plugin)
-        )
+        name = os.path.basename(plugin)
+        destination = os.path.join(vimrc, "my_plugins", name)
 
         if os.path.exists(destination):
+            print(f"Plugin {name} already cloned.", file=sys.stdout)
             continue
 
+        print(f"Cloning plugin {name} repo.", file=sys.stdout)
         Repo.clone_from(plugin, destination, depth=1)
 
     shutil.copy(

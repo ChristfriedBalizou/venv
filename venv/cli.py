@@ -33,8 +33,13 @@ def profile(users):
     - bash_aliases
     """
     for username in users:
+        print(f"{username} profile", file=sys.stdout)
         user = pwd.getpwnam(username)
+
+        print(f"Creating workspace directories", file=sys.stdout)
         assert development.create_directory(user.pw_dir, username) is True
+
+        print(f"Configuring profile", file=sys.stdout)
         assert development.profile(user) is True, f"{username} profile failed."
 
 
@@ -68,12 +73,13 @@ def vim(path, users, dependencies):
     """
 
     for username in users:
+        print(f"{username} vim", file=sys.stdout)
         user = pwd.getpwnam(username)
 
         # Install system required packages
         errors = system.install_packages(dependencies)
         if len(errors):
-            print(repr(errors), file=sys.stderr)
+            print("Vim failed: {errors!r}", file=sys.stderr)
             sys.exit(1)
 
         development.vim(path, username)
