@@ -4,6 +4,7 @@ implemented in the venv
 import pwd
 import sys
 import click
+import shutil
 
 import development  # pylint: disable=import-error
 import system  # pylint: disable=import-error
@@ -27,10 +28,16 @@ def developer():
     multiple=True,
     help="Username list"
 )
-def profile(users):
+def profile(users) -> None:
     """Configure user(s) profile with defaut base
     - bashrc
     - bash_aliases
+
+    Arguments:
+        users: to get the profile configuration
+
+    Return:
+        void
     """
     for username in users:
         print(f"{username} profile", file=sys.stdout)
@@ -68,9 +75,28 @@ def profile(users):
     multiple=True,
     help="System packages"
 )
-def vim(path, users, dependencies):
+@click.option(
+    "--force",
+    default=False,
+    show_default=True,
+    is_flag=True,
+    help="Uinstall and install"
+)
+def vim(path, users, dependencies, force) -> None:
     """Configure VI(M) as your IDE.
+
+    Arguments:
+        path: to vim runtime shared directory
+        users: to get the vimrc configuration
+        dependencies: to be install on system before vim configuration
+        force: delete vim runtin shared directory
+
+    Return:
+        void
     """
+
+    if force is True:
+        shutil.rmtree(path, ignore_errors=True)
 
     for username in users:
         print(f"{username} vim", file=sys.stdout)
