@@ -71,8 +71,8 @@ def vim(path, users, dependencies):
         user = pwd.getpwnam(username)
 
         # Install system required packages
-        errors = system.install_packages(requirements)
-        if errors.count:
+        errors = system.install_packages(dependencies)
+        if len(errors):
             print(repr(errors), file=sys.stderr)
             sys.exit(1)
 
