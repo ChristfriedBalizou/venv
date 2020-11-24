@@ -130,3 +130,8 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Load your custom basrch file
+if [ -f $HOME/.my_bashrc ]; then
+    . $HOME/.my_bashrc
+fi
