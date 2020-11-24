@@ -30,7 +30,7 @@ COMMANDES = (
 
 
 @dataclass
-class PackageQuery: # pylint: disable=too-few-public-methods
+class PackageQuery:  # pylint: disable=too-few-public-methods
     """A class use to formulate an installation
     request
     """
@@ -83,7 +83,7 @@ def install(query: PackageQuery) -> Union[CalledProcessError, None]:
         CalledProcessError if an error occure otherwise None
     """
 
-    print(f"Installing package: {query.name}", file=sys.stdout)
+    print(f"- {query.name}", file=sys.stdout)
 
     for command in COMMANDES:
         try:
@@ -95,7 +95,7 @@ def install(query: PackageQuery) -> Union[CalledProcessError, None]:
         except CalledProcessError as error:
             # YOLO I want to return instead of raise
             # to be able to use the instance after
-            print(f"{query.name} Installation failed", file=sys.stderr)
+            print(f"- {query.name} [Failed]", file=sys.stderr)
             return error
 
     return None
@@ -111,6 +111,9 @@ def install_packages(packages: List[str]) -> InstallationErrors:
     Return:
         An InstallationErrors instance
     """
+
+    print("Installing:", file=sys.stdout)
+
     for package in REQUIRED_PACKAGES:
         error = install(PackageQuery(name=package))
 
@@ -118,7 +121,7 @@ def install_packages(packages: List[str]) -> InstallationErrors:
             # Those package are required to continue
             # in case an error occure while installing
             # we raise the error and stop going futher
-            raise error # pylint: disable=raising-bad-type
+            raise error  # pylint: disable=raising-bad-type
 
     sentinel = InstallationErrors()
 
