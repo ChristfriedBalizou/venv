@@ -100,7 +100,6 @@ def vim(path, users, dependencies, force) -> None:
 
     for username in users:
         print(f"{username} vim", file=sys.stdout)
-        user = pwd.getpwnam(username)
 
         # Install system required packages
         errors = system.install_packages(dependencies)
