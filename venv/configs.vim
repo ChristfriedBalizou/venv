@@ -1,6 +1,9 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set line number
+set number
+
 " Use spaces instead of tabs
 set expandtab
 
