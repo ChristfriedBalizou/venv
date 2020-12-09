@@ -23,8 +23,8 @@ from subprocess import PIPE, check_output
 
 from git import Repo
 
-import system
-import commons as utils
+import venv.system as system
+import venv.commons as utils
 
 
 BASE_DIRECTORY = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))

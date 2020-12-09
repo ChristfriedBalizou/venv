@@ -26,7 +26,7 @@ EXTRAS_REQUIRE = {
 }
 
 ENTRY_POINTS = {
-    "console_scripts": ["venv=venv.cli:cli"]
+    "console_scripts": ["venv=venv.cli:developer"]
 }
 
 

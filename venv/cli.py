@@ -6,9 +6,9 @@ import sys
 import click
 import shutil
 
-import development  # pylint: disable=import-error
-import system  # pylint: disable=import-error
-import commons as utils  # pylint: disable=import-error
+import venv.development as development  # pylint: disable=import-error
+import venv.system as system # pylint: disable=import-error
+import venv.commons as utils  # pylint: disable=import-error
 
 
 @click.group()
