@@ -101,7 +101,7 @@ def install(query: PackageQuery) -> Union[CalledProcessError, None]:
     return None
 
 
-def install_packages(packages: List[str]) -> InstallationErrors:
+def install_packages(*packages: List[str]) -> InstallationErrors:
     """The installation will be triggered by the following
     function and will store error if they ever occure
 

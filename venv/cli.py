@@ -102,7 +102,7 @@ def vim(path, users, dependencies, force) -> None:
         print(f"{username} vim", file=sys.stdout)
 
         # Install system required packages
-        errors = system.install_packages(dependencies)
+        errors = system.install_packages(*dependencies)
         if len(errors):
             print("Vim failed: {errors!r}", file=sys.stderr)
             sys.exit(1)
