@@ -107,7 +107,7 @@ def vim(path, users, dependencies, force) -> None:
             print("Vim failed: {errors!r}", file=sys.stderr)
             sys.exit(1)
 
-        development.vim(path, username)
+        development.vim(path, pwd.getpwnam(username))
 
 
 developer.add_command(profile)

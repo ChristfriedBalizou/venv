@@ -79,7 +79,7 @@ def create_directory(base: str, username: str) -> bool:
 
 
 @utils.crash_traceback
-def vim(vimrc: str, user: str) -> None:
+def vim(vimrc: str, user: pwd.struct_passwd) -> None:
     """This function goal is to configure vim
     and setup our vim as an IDE.
 
@@ -127,10 +127,18 @@ def vim(vimrc: str, user: str) -> None:
         shutil.which("bash"),
         os.path.join(vimrc, "install_awesome_parameterized.sh"),
         vimrc,
-        user
+        user.pw_name
     )
 
     check_output(command, universal_newlines=True, stderr=PIPE)
+
+    try:
+        shutil.copyfile(
+            os.path.join(user.pw_dir, ".myvimrc"),
+            os.path.join(user.pw_dir, ".vimrc")
+        )
+    except Exception:
+        pass
 
 
 @utils.crash_false
