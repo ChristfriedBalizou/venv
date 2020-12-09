@@ -7,12 +7,9 @@ from setuptools import setup, find_packages
 
 CURRENT_DIRECTORY = os.path.realpath(os.path.dirname(__file__))
 
-SETUP_REQUIRES = (
-    "pytest-runner"
-)
+SETUP_REQUIRES = ()
 
 INSTALL_REQUIRES = (
-    "wheel >= 0.34.2",
     "GitPython == 3.1.11",
     "black == 20.8b1",
     "click == 7.1.2",
