@@ -54,6 +54,7 @@ PLUGINS = (
     "https://github.com/python-mode/python-mode.git",
     "https://github.com/psf/black.git",
     "https://github.com/Shougo/neocomplete.vim.git",
+    "https://github.com/preservim/tagbar.git",
 )  # Custom vim plugins to install
 
 
