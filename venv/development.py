@@ -53,6 +53,7 @@ PLUGINS = (
     "https://github.com/mattn/emmet-vim.git",
     "https://github.com/python-mode/python-mode.git",
     "https://github.com/psf/black.git",
+    "https://github.com/Shougo/neocomplete.vim.git",
 )  # Custom vim plugins to install
 
 
