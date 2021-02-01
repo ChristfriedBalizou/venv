@@ -57,6 +57,7 @@ PLUGINS = (
     "https://github.com/preservim/tagbar.git",
     "https://github.com/vim-airline/vim-airline.git",
     "https://github.com/vim-airline/vim-airline-themes.git",
+    "https://github.com/davidhalter/jedi-vim.git",
 )  # Custom vim plugins to install
 
 

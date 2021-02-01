@@ -83,6 +83,13 @@ let g:NERDToggleCheckAllLines = 1
 map <F3> :NERDTreeToggle <CR>
 let g:NERDTreeMouseMode = 2
 
+" " Jedi-vim
+let g:jedi#completions_enabled = 0
+let g:jedi#show_call_signatures = ""
+let g:jedi#completions_command = ""
+" Disable documentation buffer
+autocmd FileType python setlocal completeopt-=preview
+
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 0
