@@ -161,4 +161,4 @@ def profile(user: pwd.struct_passwd) -> bool:
         shutil.copy(os.path.join(BASE_DIRECTORY, "venv", bash), bashfile)
         shutil.chown(bashfile, user=user.pw_name)
 
-    return len(system.install_packages("fzf")) is 0
+    return len(system.install_packages("fzf")) == 0
