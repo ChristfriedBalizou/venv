@@ -46,6 +46,7 @@ PACKAGES = (
     "npm",
     "python-pip",
     "python3-pip",
+    "fonts-powerline",
 )  # Debian base package to install
 
 

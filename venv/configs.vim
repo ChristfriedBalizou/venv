@@ -93,6 +93,11 @@ let g:jedi#completions_command = ""
 " Disable documentation buffer
 autocmd FileType python setlocal completeopt-=preview
 
+"" Airline
+let g:ariline#extensions#tabline#enable = 1
+let g:airline_powerline_fonts = 1
+
+
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 0
