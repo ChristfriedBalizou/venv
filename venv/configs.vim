@@ -18,6 +18,9 @@ set tabstop=4
 set lbr
 set tw=80
 
+"" Set spell
+set spell
+
 "" Split
 noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
