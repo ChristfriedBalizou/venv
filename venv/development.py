@@ -55,6 +55,8 @@ PLUGINS = (
     "https://github.com/psf/black.git",
     "https://github.com/Shougo/neocomplete.vim.git",
     "https://github.com/preservim/tagbar.git",
+    "https://github.com/vim-airline/vim-airline.git",
+    "https://github.com/vim-airline/vim-airline-themes.git",
 )  # Custom vim plugins to install
 
 
