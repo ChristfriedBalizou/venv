@@ -22,7 +22,6 @@ from subprocess import PIPE, check_output
 
 from git import Repo
 
-import venv.system as system
 import venv.commons as utils
 
 
@@ -161,5 +160,3 @@ def profile(user: utils.User) -> bool:
 
         shutil.copy(os.path.join(BASE_DIRECTORY, "venv", bash), bashfile)
         shutil.chown(bashfile, user=user.pw_name)
-
-    return len(system.install_packages("fzf")) == 0

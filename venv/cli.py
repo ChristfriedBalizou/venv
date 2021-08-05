@@ -5,8 +5,10 @@ import sys
 import click
 import shutil
 
+from typing import List
+
 import venv.development as development  # pylint: disable=import-error
-import venv.system as system # pylint: disable=import-error
+import venv.system as system  # pylint: disable=import-error
 import venv.commons as utils  # pylint: disable=import-error
 
 
@@ -25,13 +27,21 @@ def developer():
     multiple=True,
     help="User home path list"
 )
-def profile(users) -> None:
+@click.option(
+    "--install",
+    default=False,
+    show_default=True,
+    is_flag=True,
+    help="Install system dependencies"
+)
+def profile(users: List[str], install: bool) -> None:
     """Configure user(s) profile with defaut base
     - bashrc
     - bash_aliases
 
     Arguments:
         users: to get the profile configuration
+        install: if set to True install system packages otherwise no
 
     Return:
         void
@@ -44,7 +54,13 @@ def profile(users) -> None:
         assert development.create_directory(pw_dir, user.pw_name) is True
 
         print(f"Configuring profile", file=sys.stdout)
-        assert development.profile(user) is True, f"{user.pw_name} profile failed."
+        development.profile(user)
+
+        if install is False:
+            return  # we stop here no more stuff to do
+
+        packages = system.install_packages("fzf")
+        assert len(packages) == 0, f"{user.pw_name} profile failed."
 
 
 @click.command("vim")
