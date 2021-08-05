@@ -10,10 +10,10 @@ CURRENT_DIRECTORY = os.path.realpath(os.path.dirname(__file__))
 SETUP_REQUIRES = ()
 
 INSTALL_REQUIRES = (
+    "lincl == 1.0",
     "GitPython == 3.1.11",
     "black == 20.8b1",
     "click == 7.1.2",
-    "requests",
 )
 
 TESTS_REQUIRES = (

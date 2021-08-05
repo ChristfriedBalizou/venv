@@ -20,8 +20,8 @@ import sys
 import shutil
 from subprocess import PIPE, check_output, call
 
-import requests
 from git import Repo
+from lincl import sed
 
 import venv.commons as utils
 
@@ -165,6 +165,7 @@ def profile(user: utils.User) -> bool:
         ohmybash = os.path.join(BASE_DIRECTORY, "venv", "oh-my-bash.sh")
         with open(ohmybash, "rb") as buff:
             call(buff.read(), shell=True)
+        sed("-i", "/OSH_THEME/c\\OSH_THEME='agnoster'", f"{bashrcfile}.omb")
 
     # 2. Create default basrch file
     for bash in ("bashrc", "bash_aliases"):
