@@ -13,6 +13,7 @@ INSTALL_REQUIRES = (
     "GitPython == 3.1.11",
     "black == 20.8b1",
     "click == 7.1.2",
+    "requests",
 )
 
 TESTS_REQUIRES = (

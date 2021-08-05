@@ -18,8 +18,9 @@ The listed function aim to install and setup:
 import os
 import sys
 import shutil
-from subprocess import PIPE, check_output
+from subprocess import PIPE, check_output, call
 
+import requests
 from git import Repo
 
 import venv.commons as utils
@@ -155,8 +156,35 @@ def profile(user: utils.User) -> bool:
     Return:
         True is everything went fine otherwise False
     """
+
+    # 1. Install Oh My Bash
+    # https://github.com/ohmybash/oh-my-bash
+    bashrcfile = os.path.join(user.pw_dir, ".bashrc")
+
+    if not os.path.exists(f"{bashrcfile}.omb"):
+        ohmybash = os.path.join(BASE_DIRECTORY, "venv", "oh-my-bash.sh")
+        with open(ohmybash, "rb") as buff:
+            call(buff.read(), shell=True)
+
+    # 2. Create default basrch file
     for bash in ("bashrc", "bash_aliases"):
         bashfile = os.path.join(user.pw_dir, f".{bash}")
 
         shutil.copy(os.path.join(BASE_DIRECTORY, "venv", bash), bashfile)
         shutil.chown(bashfile, user=user.pw_name)
+
+    # 3. Download powerline fonts
+    fonts = os.path.join(user.pw_dir, ".fonts")
+
+    if not os.path.exists(fonts):
+        Repo.clone_from(
+            "https://github.com/powerline/fonts.git",
+            fonts,
+            depth=1
+        )
+
+        current_pwd = os.getcwd()
+
+        os.chdir(fonts)
+        call("./install.sh")
+        os.chdir(current_pwd)

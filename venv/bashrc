@@ -93,3 +93,20 @@ fi
 if [ -f $HOME/.my_bashrc ]; then
     . $HOME/.my_bashrc
 fi
+
+# Update Powerline fonts
+POWERLINES=$(fc-list | grep Powerline -c)
+POWERLINE_FONTS=$HOME/.fonts
+
+if [ -f $POWERLINE_FONTS ] && [ $POWERLINES -eq 0 ]; then
+    fc-cache -f "${POWERLINE_FONTS}"
+fi
+
+# Oh My Bash configuration
+OSH_THEME="agnoster"
+DISABLE_AUTO_UPDATE=true
+DISABLE_UPDATE_PROMPT=true
+
+if [ -f $HOME/.bashrc.omb ]; then
+    . $HOME/.bashrc.omb
+fi
