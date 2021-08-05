@@ -17,7 +17,6 @@ The listed function aim to install and setup:
 """
 import os
 import sys
-import pwd
 import shutil
 from subprocess import PIPE, check_output
 
@@ -84,7 +83,7 @@ def create_directory(base: str, username: str) -> bool:
 
 
 @utils.crash_traceback
-def vim(vimrc: str, user: pwd.struct_passwd) -> None:
+def vim(vimrc: str, user: utils.User) -> None:
     """This function goal is to configure vim
     and setup our vim as an IDE.
 
@@ -147,7 +146,7 @@ def vim(vimrc: str, user: pwd.struct_passwd) -> None:
 
 
 @utils.crash_false
-def profile(user: pwd.struct_passwd) -> bool:
+def profile(user: utils.User) -> bool:
     """This function will apply the same profile(bashrc)
     shortcuts and function.
 

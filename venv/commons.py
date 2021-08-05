@@ -1,20 +1,25 @@
 """This file contains cross module functions
 """
+import os
 import sys
 import contextlib
 import traceback
-import pwd
+
+from dataclasses import dataclass
 
 
-def real_users():
-    """Get all user with /home or /root
-    as directory
+@dataclass
+class User:
+    """This class is implemented to mimic pwd.struct_passwd
+
+    To make to code platform(centos, debian, ...) user should be created
+    by the given home path.
     """
-    return [
-        user.pw_name
-        for user in pwd.getpwall()
-        if any(user.pw_dir.startswith(path) for path in ("/home", "/root"))
-    ]
+    pw_dir: str
+
+    @property
+    def pw_name(self):
+        return os.path.basename(self.pw_dir)
 
 
 def crash_false(func):

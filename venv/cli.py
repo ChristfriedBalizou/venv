@@ -1,7 +1,6 @@
 """This file is a command line interface to all sub functions
 implemented in the venv
 """
-import pwd
 import sys
 import click
 import shutil
@@ -23,10 +22,8 @@ def developer():
 @click.option(
     "-u",
     "--users",
-    default=utils.real_users(),
-    show_default=utils.real_users(),
     multiple=True,
-    help="Username list"
+    help="User home path list"
 )
 def profile(users) -> None:
     """Configure user(s) profile with defaut base
@@ -39,15 +36,15 @@ def profile(users) -> None:
     Return:
         void
     """
-    for username in users:
-        print(f"{username} profile", file=sys.stdout)
-        user = pwd.getpwnam(username)
+    for pw_dir in users:
+        user = utils.User(pw_dir=pw_dir)
+        print(f"{user.pw_name} profile", file=sys.stdout)
 
         print(f"Creating workspace directories", file=sys.stdout)
-        assert development.create_directory(user.pw_dir, username) is True
+        assert development.create_directory(pw_dir, user.pw_name) is True
 
         print(f"Configuring profile", file=sys.stdout)
-        assert development.profile(user) is True, f"{username} profile failed."
+        assert development.profile(user) is True, f"{user.pw_name} profile failed."
 
 
 @click.command("vim")
@@ -62,10 +59,8 @@ def profile(users) -> None:
 @click.option(
     "-u",
     "--users",
-    default=utils.real_users(),
-    show_default=utils.real_users(),
     multiple=True,
-    help="Username list"
+    help="User home path list"
 )
 @click.option(
     "-d",
@@ -98,8 +93,9 @@ def vim(path, users, dependencies, force) -> None:
     if force is True:
         shutil.rmtree(path, ignore_errors=True)
 
-    for username in users:
-        print(f"{username} vim", file=sys.stdout)
+    for pw_dir in users:
+        user = utils.User(pw_dir=pw_dir)
+        print(f"{user.pw_name} vim", file=sys.stdout)
 
         # Install system required packages
         errors = system.install_packages(*dependencies)
@@ -107,7 +103,7 @@ def vim(path, users, dependencies, force) -> None:
             print(f"Vim failed: {errors!r}", file=sys.stderr)
             sys.exit(1)
 
-        development.vim(path, pwd.getpwnam(username))
+        development.vim(path, user)
 
 
 developer.add_command(profile)
