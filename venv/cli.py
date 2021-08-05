@@ -112,3 +112,7 @@ def vim(path, users, dependencies, force) -> None:
 
 developer.add_command(profile)
 developer.add_command(vim)
+
+
+if __name__ == "__main__":
+    developer()
