@@ -81,8 +81,7 @@ def profile(users: List[str], install: bool) -> None:
 @click.option(
     "-d",
     "--dependencies",
-    default=list(development.PACKAGES),  # Documentation lied. Click==7.0
-    show_default=True,
+    default=[],
     multiple=True,
     help="System packages"
 )
