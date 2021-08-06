@@ -42,9 +42,7 @@ main() {
   fi
 
   if [ -d "$OSH" ]; then
-    printf "${YELLOW}You already have Oh My Bash installed.${NORMAL}\n"
-    printf "You'll need to remove $OSH if you want to re-install.\n"
-    exit
+      rm -rf $OSH
   fi
 
   # Prevent the cloned repository from having insecure permissions. Failing to do
