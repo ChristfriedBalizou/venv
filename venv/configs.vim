@@ -29,10 +29,6 @@ noremap <Leader>v :<C-u>vsplit<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins configs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Pymode
-let g:pymode=1
-let g:pymode_indent=0
-
 " Emmet
 let g:user_emmet_leader_key=';'
 let g:user_emmet_mode='a'
@@ -54,9 +50,6 @@ noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
-
-" NeoComplete
-let g:neocomplete#enable_at_startup=1
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1

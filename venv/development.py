@@ -51,9 +51,7 @@ PACKAGES = (
 
 PLUGINS = (
     "https://github.com/mattn/emmet-vim.git",
-    "https://github.com/python-mode/python-mode.git",
     "https://github.com/psf/black.git",
-    "https://github.com/Shougo/neocomplete.vim.git",
     "https://github.com/preservim/tagbar.git",
     "https://github.com/vim-airline/vim-airline.git",
     "https://github.com/vim-airline/vim-airline-themes.git",
