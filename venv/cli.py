@@ -113,11 +113,12 @@ def vim(path, users, dependencies, force) -> None:
         print(f"{user.pw_name} vim", file=sys.stdout)
 
         # Install system required packages
-        errors = system.install_packages(*dependencies)
-        if len(errors):
-            print(f"Vim failed: {errors!r}", file=sys.stderr)
-            sys.exit(1)
+        errors = []
 
+        if dependencies:
+            errors = system.install_packages(*dependencies)
+
+        assert len(errors) == 0, f"Vim failed: {errors!r}"
         development.vim(path, user)
 
 
