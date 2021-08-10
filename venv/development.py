@@ -193,3 +193,15 @@ def profile(user: utils.User) -> bool:
         os.chdir(fonts)
         call("./install.sh")
         os.chdir(current_pwd)
+
+    # 4. Install and setup fzf
+    fzf = os.path.join(user.pw_dir, ".fzf")
+
+    if not os.path.exists(fzf):
+        Repo.clone_from(
+            "https://github.com/junegunn/fzf.git",
+            fzf,
+            depth=1
+        )
+
+        call(os.path.join(fzf, "install"))

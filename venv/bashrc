@@ -68,12 +68,13 @@ if [ -f $HOME/.bash_aliases ]; then
     . $HOME/.bash_aliases
 fi
 
+FZF_BASE="$HOME/.fzf"
+PATH=$FZF_BASE/bin:$PATH
+
 if command -v fzf &> /dev/null
 then
-    FZF_BASE="/usr/share/doc/fzf/examples"
-
-    if [ -f $FZF_BASE/key-bidings.bash ]; then
-        . $FZF_BASE/key-bidings.bash
+    if [ -f $FZF_BASE/shell/key-bidings.bash ]; then
+        . $FZF_BASE/shell/key-bidings.bash
     fi
     export FZF_DEFAULT_OPTS='--height 40% --multi -i --layout=reverse --border'
 fi
