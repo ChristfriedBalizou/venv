@@ -99,7 +99,7 @@ map <F3> :NERDTreeToggle <CR>
 let g:NERDTreeMouseMode = 2
 
 " " Jedi-vim
-let g:jedi#show_call_signatures = ""
+let g:jedi#show_call_signatures = "0"
 " Disable documentation buffer
 autocmd FileType python setlocal completeopt-=preview
 
