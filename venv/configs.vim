@@ -27,6 +27,25 @@ noremap <Leader>v :<C-u>vsplit<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax highlighting
+syntax enable
+
+" Enable 256 colors palette in Gnome Terminal
+if !has("gui_running")
+    set t_Co=256
+endif
+
+try
+    colorscheme gruvbox
+catch
+endtry
+
+set background=dark
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins configs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Emmet
