@@ -105,6 +105,8 @@ autocmd FileType python setlocal completeopt-=preview
 
 "" Airline
 let g:ariline#extensions#tabline#enable = 1
+let g:airline_theme = 'base16_gruvbox_dark_hard'
+let g:airline_theme = 'base16_gruvbox_dark_hard'
 let g:airline_powerline_fonts = 1
 
 
