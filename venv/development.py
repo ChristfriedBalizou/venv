@@ -50,12 +50,12 @@ PACKAGES = (
 
 
 PLUGINS = (
-    "https://github.com/mattn/emmet-vim.git",
-    "https://github.com/psf/black.git",
-    "https://github.com/preservim/tagbar.git",
-    "https://github.com/vim-airline/vim-airline.git",
-    "https://github.com/vim-airline/vim-airline-themes.git",
-    "https://github.com/davidhalter/jedi-vim.git",
+    ("master", "https://github.com/mattn/emmet-vim.git"),
+    ("master", "https://github.com/preservim/tagbar.git"),
+    ("master", "https://github.com/vim-airline/vim-airline.git"),
+    ("master", "https://github.com/vim-airline/vim-airline-themes.git"),
+    ("master", "https://github.com/davidhalter/jedi-vim.git"),
+    ("master", "https://github.com/psf/black.git"),
 )  # Custom vim plugins to install
 
 
@@ -109,8 +109,8 @@ def vim(vimrc: str, user: utils.User) -> None:
             depth=1
         )  # Clone base vimrc config from amix
 
-    for plugin in PLUGINS:
-        name = os.path.basename(plugin)
+    for (branch, repository) in PLUGINS:
+        name = os.path.basename(repository)
         destination = os.path.join(vimrc, "my_plugins", name)
 
         if os.path.exists(destination):
@@ -118,7 +118,13 @@ def vim(vimrc: str, user: utils.User) -> None:
             continue
 
         print(f"Cloning plugin {name} repo.", file=sys.stdout)
-        Repo.clone_from(plugin, destination, depth=1, recurse_submodules=True)
+        Repo.clone_from(
+            repository,
+            destination,
+            depth=1,
+            branch=branch,
+            recurse_submodules=True
+        )
 
     shutil.copy(
         os.path.join(BASE_DIRECTORY, "venv", "configs.vim"),
