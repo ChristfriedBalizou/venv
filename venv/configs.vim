@@ -80,9 +80,7 @@ map <F3> :NERDTreeToggle <CR>
 let g:NERDTreeMouseMode = 2
 
 " " Jedi-vim
-let g:jedi#completions_enabled = 0
 let g:jedi#show_call_signatures = ""
-let g:jedi#completions_command = ""
 " Disable documentation buffer
 autocmd FileType python setlocal completeopt-=preview
 
