@@ -56,6 +56,7 @@ PLUGINS = (
     ("master", "https://github.com/vim-airline/vim-airline-themes.git"),
     ("0.10.0", "https://github.com/davidhalter/jedi-vim.git"),
     ("master", "https://github.com/psf/black.git"),
+    ("master", "https://github.com/vim-syntastic/syntastic.git"),
 )  # Custom vim plugins to install
 
 

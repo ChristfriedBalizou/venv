@@ -109,6 +109,9 @@ let g:airline_theme = 'base16_gruvbox_dark_hard'
 let g:airline_theme = 'base16_gruvbox_dark_hard'
 let g:airline_powerline_fonts = 1
 
+"" Syntastic configuration
+" python
+let g:syntastic_python_checkers = ['pylama']
 
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
