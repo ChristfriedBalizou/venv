@@ -57,6 +57,7 @@ PLUGINS = (
     ("0.10.0", "https://github.com/davidhalter/jedi-vim.git"),
     ("master", "https://github.com/psf/black.git"),
     ("master", "https://github.com/vim-syntastic/syntastic.git"),
+    ("master", "https://github.com/xolox/vim-session.git"),
 )  # Custom vim plugins to install
 
 
