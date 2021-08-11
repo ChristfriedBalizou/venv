@@ -3,7 +3,6 @@ implemented in the venv
 """
 import sys
 import click
-import shutil
 
 from typing import List
 
@@ -85,29 +84,17 @@ def profile(users: List[str], install: bool) -> None:
     multiple=True,
     help="System packages"
 )
-@click.option(
-    "--force",
-    default=False,
-    show_default=True,
-    is_flag=True,
-    help="Uinstall and install"
-)
-def vim(path, users, dependencies, force) -> None:
+def vim(path, users, dependencies) -> None:
     """Configure VI(M) as your IDE.
 
     Arguments:
         path: to vim runtime shared directory
         users: to get the vimrc configuration
         dependencies: to be install on system before vim configuration
-        force: delete vim runtin shared directory
 
     Return:
         void
     """
-
-    if force is True:
-        shutil.rmtree(path, ignore_errors=True)
-
     for pw_dir in users:
         user = utils.User(pw_dir=pw_dir)
         print(f"{user.pw_name} vim", file=sys.stdout)
