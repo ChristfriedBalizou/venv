@@ -55,7 +55,7 @@ PLUGINS = (
     ("master", "https://github.com/vim-airline/vim-airline.git"),
     ("master", "https://github.com/vim-airline/vim-airline-themes.git"),
     ("0.10.0", "https://github.com/davidhalter/jedi-vim.git"),
-    ("master", "https://github.com/psf/black.git"),
+    ("main", "https://github.com/psf/black.git"),
     ("master", "https://github.com/vim-syntastic/syntastic.git"),
     ("master", "https://github.com/xolox/vim-misc.git"),
     ("master", "https://github.com/xolox/vim-session.git"),
