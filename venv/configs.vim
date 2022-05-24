@@ -98,11 +98,6 @@ let g:NERDToggleCheckAllLines = 1
 map <F3> :NERDTreeToggle <CR>
 let g:NERDTreeMouseMode = 2
 
-" " Jedi-vim
-let g:jedi#show_call_signatures = "0"
-" Disable documentation buffer
-autocmd FileType python setlocal completeopt-=preview
-
 "" Airline
 let g:ariline#extensions#tabline#enable = 1
 let g:airline_theme = 'base16_gruvbox_dark_hard'
