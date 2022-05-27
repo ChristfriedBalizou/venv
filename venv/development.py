@@ -54,7 +54,7 @@ PLUGINS = (
     ("master", "https://github.com/preservim/tagbar.git"),
     ("master", "https://github.com/vim-airline/vim-airline.git"),
     ("master", "https://github.com/vim-airline/vim-airline-themes.git"),
-    ("master", "https://github.com/python-mode/python-mode.git"),
+    ("0.11.0", "https://github.com/davidhalter/jedi-vim.git"),,
     ("main", "https://github.com/psf/black.git"),
     ("master", "https://github.com/vim-syntastic/syntastic.git"),
     ("master", "https://github.com/xolox/vim-misc.git"),
