@@ -59,6 +59,7 @@ PLUGINS = (
     ("master", "https://github.com/vim-syntastic/syntastic.git"),
     ("master", "https://github.com/xolox/vim-misc.git"),
     ("master", "https://github.com/xolox/vim-session.git"),
+    ("0.17.0", "https://github.com/phpactor/phpactor.git"),
 )  # Custom vim plugins to install
 
 
