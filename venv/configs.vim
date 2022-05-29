@@ -17,6 +17,7 @@ set tabstop=4
 " Linebreak on 80 characters
 set lbr
 set tw=80
+set colorcolumn=80
 
 "" Set spell
 set spell
