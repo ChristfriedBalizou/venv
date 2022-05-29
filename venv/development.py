@@ -60,6 +60,7 @@ PLUGINS = (
     ("master", "https://github.com/xolox/vim-misc.git"),
     ("master", "https://github.com/xolox/vim-session.git"),
     ("0.17.0", "https://github.com/phpactor/phpactor.git"),
+    ("v1.3", "https://tpope.io/vim/commentary.git"),
 )  # Custom vim plugins to install
 
 
