@@ -62,6 +62,7 @@ PLUGINS = (
     ("0.17.0", "https://github.com/phpactor/phpactor.git"),
     ("v1.3", "https://tpope.io/vim/commentary.git"),
     ("v2.2", "https://github.com/tpope/vim-surround.git"),
+    ("master", "https://tpope.io/vim/repeat.git"),
 )  # Custom vim plugins to install
 
 
