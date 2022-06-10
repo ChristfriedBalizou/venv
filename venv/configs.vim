@@ -119,7 +119,7 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#rename_command = "<leader>r"
 let g:jedi#completions_enabled = 1
-let g:jedi#show_call_signatures = "1"
+let g:jedi#show_call_signatures = "0"
 autocmd FileType python setlocal completeopt-=preview
 
 "" Syntastic configuration
