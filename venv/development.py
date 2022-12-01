@@ -63,6 +63,7 @@ PLUGINS = (
     ("v1.3", "https://tpope.io/vim/commentary.git"),
     ("v2.2", "https://github.com/tpope/vim-surround.git"),
     ("master", "https://tpope.io/vim/repeat.git"),
+    ("master", "https://github.com/python-mode/python-mode.git"),
 )  # Custom vim plugins to install
 
 
