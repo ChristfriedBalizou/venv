@@ -134,6 +134,9 @@ let g:session_autosave_silent = 1
 let g:session_default_to_last = 1
 let g:session_verbose_messages = 0
 
+" Python Mode
+let g:pymode_rope_completion = 0
+
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 0
