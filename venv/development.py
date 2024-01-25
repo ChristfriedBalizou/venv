@@ -64,6 +64,7 @@ PLUGINS = (
     ("v2.2", "https://github.com/tpope/vim-surround.git"),
     ("master", "https://tpope.io/vim/repeat.git"),
     ("master", "https://github.com/python-mode/python-mode.git"),
+    ("release", "https://github.com/github/copilot.vim.git"),
 )  # Custom vim plugins to install
 
 
