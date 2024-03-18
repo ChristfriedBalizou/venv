@@ -155,6 +155,15 @@ def vim(vimrc: str, user: utils.User) -> None:
             os.path.join(user.pw_dir, ".myvimrc"),
             os.path.join(user.pw_dir, ".vimrc")
         )
+
+        os.makedirs(
+            os.path.join(user.pw_dir, ".config", "nvim"), exist_ok=True
+        )
+
+        shutil.copyfile(
+            os.path.join(BASE_DIRECTORY, "venv", "init.vim"),
+            os.path.join(user.pw_dir, ".config", "nvim", "init.vim")
+        )
     except Exception:
         pass
 
