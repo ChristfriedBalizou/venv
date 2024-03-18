@@ -224,3 +224,9 @@ def profile(user: utils.User) -> bool:
         )
 
         call(os.path.join(fzf, "install"))
+
+    # 5. Copy tmux conf
+    shutil.copyfile(
+        os.path.join(BASE_DIRECTORY, "venv", "tmux.conf"),
+        os.path.join(user.pw_dir, ".tmux.conf")
+    )
