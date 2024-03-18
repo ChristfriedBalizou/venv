@@ -65,6 +65,7 @@ PLUGINS = (
     ("master", "https://tpope.io/vim/repeat.git"),
     ("master", "https://github.com/python-mode/python-mode.git"),
     ("release", "https://github.com/github/copilot.vim.git"),
+    ("master", "https://github.com/ycm-core/YouCompleteMe.git"),
 )  # Custom vim plugins to install
 
 
