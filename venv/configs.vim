@@ -135,6 +135,7 @@ let g:session_default_to_last = 1
 let g:session_verbose_messages = 0
 
 " Python Mode
+let g:pymode_rope = 0
 let g:pymode_rope_completion = 0
 
 " Tagbar
