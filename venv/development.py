@@ -169,7 +169,7 @@ def vim(vimrc: str, user: utils.User) -> None:
             os.path.join(BASE_DIRECTORY, "global_extra_conf.py"),
             os.path.join(vimrc, "global_extra_conf.py")
         )
-    except FileNotFoundError:
+    except Exception:
         pass
 
 
