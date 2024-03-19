@@ -161,12 +161,12 @@ def vim(vimrc: str, user: utils.User) -> None:
         )
 
         shutil.copyfile(
-            os.path.join(BASE_DIRECTORY, "venv", "init.vim"),
+            os.path.join(BASE_DIRECTORY, "init.vim"),
             os.path.join(user.pw_dir, ".config", "nvim", "init.vim")
         )
 
         shutil.copyfile(
-            os.path.join(BASE_DIRECTORY, "venv", "global_extra_conf.py"),
+            os.path.join(BASE_DIRECTORY, "global_extra_conf.py"),
             os.path.join(vimrc, "global_extra_conf.py")
         )
     except FileNotFoundError:
