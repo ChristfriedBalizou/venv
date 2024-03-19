@@ -118,7 +118,7 @@ let g:jedi#goto_stubs_command = "<leader>s"
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#rename_command = "<leader>r"
-let g:jedi#completions_enabled = 0
+let g:jedi#completions_enabled = 1
 let g:jedi#show_call_signatures = "0"
 autocmd FileType python setlocal completeopt-=preview
 
@@ -133,10 +133,6 @@ let g:session_autosave_periodic = 15
 let g:session_autosave_silent = 1
 let g:session_default_to_last = 1
 let g:session_verbose_messages = 0
-
-" Python Mode
-let g:pymode_rope = 0
-let g:pymode_rope_completion = 0
 
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
