@@ -149,28 +149,28 @@ def vim(vimrc: str, user: utils.User) -> None:
     )
 
     check_output(command, universal_newlines=True, stderr=PIPE)
+    os.makedirs(
+        os.path.join(user.pw_dir, ".config", "nvim"), exist_ok=True
+    )
 
-    try:
-        shutil.copyfile(
+    for (src, dest) in (
+        (
             os.path.join(user.pw_dir, ".myvimrc"),
-            os.path.join(user.pw_dir, ".vimrc")
-        )
-
-        os.makedirs(
-            os.path.join(user.pw_dir, ".config", "nvim"), exist_ok=True
-        )
-
-        shutil.copyfile(
+            os.path.join(user.pw_dir, ".vimrc"),
+        ),
+        (
             os.path.join(BASE_DIRECTORY, "init.vim"),
             os.path.join(user.pw_dir, ".config", "nvim", "init.vim")
-        )
-
-        shutil.copyfile(
+        ),
+        (
             os.path.join(BASE_DIRECTORY, "global_extra_conf.py"),
             os.path.join(vimrc, "global_extra_conf.py")
-        )
-    except Exception:
-        pass
+        ),
+    ):
+        try:
+            shutil.copyfile(src, dest)
+        except Exception:
+            pass
 
 
 @utils.crash_false
