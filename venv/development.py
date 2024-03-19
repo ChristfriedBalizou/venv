@@ -65,7 +65,6 @@ PLUGINS = (
     ("master", "https://tpope.io/vim/repeat.git"),
     ("master", "https://github.com/python-mode/python-mode.git"),
     ("release", "https://github.com/github/copilot.vim.git"),
-    ("master", "https://github.com/ycm-core/YouCompleteMe.git"),
 )  # Custom vim plugins to install
 
 
@@ -161,10 +160,6 @@ def vim(vimrc: str, user: utils.User) -> None:
         (
             os.path.join(BASE_DIRECTORY, "venv", "init.vim"),
             os.path.join(user.pw_dir, ".config", "nvim", "init.vim")
-        ),
-        (
-            os.path.join(BASE_DIRECTORY, "venv", "global_extra_conf.py"),
-            os.path.join(vimrc, "global_extra_conf.py")
         ),
     ):
         try:
