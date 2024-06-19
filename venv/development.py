@@ -64,6 +64,8 @@ PLUGINS = (
     ("v2.2", "https://github.com/tpope/vim-surround.git"),
     ("master", "https://tpope.io/vim/repeat.git"),
     ("release", "https://github.com/github/copilot.vim.git"),
+    ("master", "https://github.com/ryanoasis/vim-devicons.git"),
+    ("master", "https://github.com/vwxyutarooo/nerdtree-devicons-syntax.git"),
 )  # Custom vim plugins to install
 
 
