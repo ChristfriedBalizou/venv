@@ -1,0 +1,46 @@
+---
+debian:
+  packages:
+    - git
+    - tig
+    - vim-nox
+    - exuberant-ctags
+    - cmake
+    - npm
+    - tmux
+    - htop
+    - ctags
+    - ctags-etags
+    - xclip
+    - boxes
+    - python3
+    - python3-pip
+    - fonts-powerline
+
+  uninstall:
+    - vim
+  
+centos:
+  packages:
+    - git
+    - tig
+    - ctags
+    - ctags-etags
+    - xclip
+    - htop
+    - boxes  
+    - gcc
+    - kernel-devel
+    - make
+    - ncurses-devel
+    - devtoolset-8
+    - bison
+    - python36
+    - python36-devel
+    - python36-setuptools
+  
+  uninstall:
+    - tmux
+    - neovim
+    - vim
+    

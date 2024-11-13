@@ -1,0 +1,12 @@
+---
+- include_tasks: locale.yml
+  tags:
+    - locale
+
+- include_tasks: filesystem.yml
+  tags:
+    - filesystem
+
+- include_tasks: user.yml
+  tags:
+    - user

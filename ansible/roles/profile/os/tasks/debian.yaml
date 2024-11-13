@@ -1,0 +1,28 @@
+---
+- name: Upgrade all system packages
+  ansible.builtin.apt:
+    upgrade: full
+    update_cache: true
+    cache_valid_time: 3600
+    autoclean: true
+    autoremove: true
+  register: apt_upgrade
+  retries: 5
+  until: apt_upgrade is success
+  ignore_errors: true
+
+- name: Packages | Uninstall required packages
+  ansible.builtin.apt:
+    name: "{{ debian.packages | default([]) }}"
+    state: absent
+    update_cache: true
+
+- name: Packages | Install required packages
+  ansible.builtin.apt:
+    name: "{{ debian.packages | default([]) }}"
+    state: present
+    update_cache: true
+
+- name: Packages | Remove leaf packages
+  ansible.builtin.apt:
+    autoremove: true

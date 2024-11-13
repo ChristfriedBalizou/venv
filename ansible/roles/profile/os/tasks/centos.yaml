@@ -1,0 +1,16 @@
+---
+- name: Packages | Uninstall required packages
+  ansible.builtin.yum:
+    name: "{{ centos.uninstall | default([]) }}"
+    state: absent
+    update_cache: true
+
+- name: Packages | Install required packages
+  ansible.builtin.yum:
+    name: "{{ centos.packages | default([]) }}"
+    state: present
+    update_cache: true
+
+- name: Packages | Remove leaf packages
+  ansible.builtin.yum:
+    autoremove: true

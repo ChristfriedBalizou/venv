@@ -1,0 +1,20 @@
+---
+
+- block:
+    - include_tasks: debian.yml
+      tags:
+        - packages
+  when: "{{ ansible_distribution }}" == "Debian"
+
+- block: 
+  - include_tasks: centos.yml
+    tags:
+      - packages
+  when: "{{ ansible_distribution }}" == "CentOS"
+
+- block:
+  - include_tasks: ubuntu.yml
+    tags:
+      - packages
+  when: "{{ ansible_distribution }}" == "Ubuntu"
+
