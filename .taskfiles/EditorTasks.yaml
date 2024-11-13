@@ -1,0 +1,13 @@
+---
+version: "3"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/inventory"
+
+tasks:
+
+  prepare:
+    desc: Setup and prepare the our favorite editor settings
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: echo "I love VIM"

@@ -1,0 +1,13 @@
+---
+version: "3"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/inventory"
+
+tasks:
+
+  prepare:
+    desc: Prepare all the host with required packages
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: echo "Nothing Implemented"
