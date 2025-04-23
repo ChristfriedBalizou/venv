@@ -99,12 +99,12 @@ if [ -f $HOME/.my_bashrc ]; then
 fi
 
 # Update Powerline fonts
-POWERLINES=$(fc-list | grep Powerline -c)
-POWERLINE_FONTS=$HOME/.fonts
+# POWERLINES=$(fc-list | grep Powerline -c)
+# POWERLINE_FONTS=$HOME/.fonts
 
-if [ -f $POWERLINE_FONTS ] && [ $POWERLINES -eq 0 ]; then
-    fc-cache -f "${POWERLINE_FONTS}"
-fi
+# if [ -f $POWERLINE_FONTS ] && [ $POWERLINES -eq 0 ]; then
+#    fc-cache -f "${POWERLINE_FONTS}"
+# fi
 
 # Oh My Bash configuration
 DISABLE_AUTO_UPDATE=true
