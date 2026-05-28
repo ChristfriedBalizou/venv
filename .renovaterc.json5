@@ -3,6 +3,10 @@
   extends: ["github>christfriedbalizou/renovate"],
   onboarding: true,
   requireConfig: "optional",
+  allowedEnv: ["MISE_TRUSTED_CONFIG_PATHS"],
+  env: {
+    MISE_TRUSTED_CONFIG_PATHS: "/tmp/renovate/repos/github/christfriedbalizou/dotfiles",
+  },
   dependencyDashboardTitle: "Renovate Dashboard 🤖",
   suppressNotifications: [
     "prIgnoreNotification",
