@@ -71,11 +71,9 @@ just clean-state  # remove dotfiles installer logs and backups
 ## Dependency Updates
 
 Tool versions are pinned in `mise.toml` and resolved in `mise.lock`.
+Mise updates are handled manually because Renovate's mise manager is disabled.
 Renovate is configured in `.renovaterc.json5` and extends the shared
 `github>christfriedbalizou/renovate` preset.
-
-Renovate should open grouped pull requests for mise tool updates and maintain
-the lock file when those versions change.
 
 Merged Renovate updates on `main` are tagged automatically by
 `.github/workflows/tag.yaml`.

@@ -3,15 +3,14 @@
   extends: ["github>christfriedbalizou/renovate"],
   onboarding: true,
   requireConfig: "optional",
-  allowedEnv: ["MISE_TRUSTED_CONFIG_PATHS"],
-  env: {
-    MISE_TRUSTED_CONFIG_PATHS: "/tmp/renovate/repos/github/christfriedbalizou/dotfiles",
-  },
   dependencyDashboardTitle: "Renovate Dashboard 🤖",
   suppressNotifications: [
     "prIgnoreNotification",
     "prEditedNotification",
   ],
+  mise: {
+    enabled: false,
+  },
   customManagers: [
     {
       customType: "regex",
@@ -47,15 +46,6 @@
       description: "Keep major dependency updates manual",
       matchUpdateTypes: ["major"],
       automerge: false,
-    },
-    {
-      description: "Group mise tool updates together",
-      matchManagers: ["mise"],
-      groupName: "mise tools",
-      labels: [
-        "renovate/mise",
-        "area/mise",
-      ],
     },
     {
       description: "Group tagged Vim plugin updates together",
