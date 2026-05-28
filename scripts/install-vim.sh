@@ -63,15 +63,21 @@ clone_or_checkout_ref() {
   fi
 
   if [ -d "$destination/.git" ]; then
-    if [ -n "$digest" ]; then
-      retry 3 git -C "$destination" fetch --depth 1 origin "$digest" || retry 3 git -C "$destination" fetch origin "$ref"
-    else
-      retry 3 git -C "$destination" fetch --depth 1 origin "$ref"
+    if {
+      if [ -n "$digest" ]; then
+        retry 3 git -C "$destination" fetch --depth 1 origin "$digest" || retry 3 git -C "$destination" fetch origin "$ref"
+      else
+        retry 3 git -C "$destination" fetch --depth 1 origin "$ref"
+      fi
+    }; then
+      retry 3 git -C "$destination" checkout --detach "$checkout_ref"
+      retry 3 git -C "$destination" submodule update --init --recursive
+      success "checked out $(basename "$destination") at $checkout_ref"
+      return 0
     fi
-    retry 3 git -C "$destination" checkout --detach "$checkout_ref"
-    retry 3 git -C "$destination" submodule update --init --recursive
-    success "checked out $(basename "$destination") at $checkout_ref"
-    return 0
+
+    warn "failed to update existing $(basename "$destination"); recloning"
+    rm -rf "$destination"
   fi
 
   if [ -n "$digest" ]; then
