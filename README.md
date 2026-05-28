@@ -71,7 +71,7 @@ just clean-state  # remove venv installer logs and backups
 ## Dependency Updates
 
 Tool versions are pinned in `mise.toml` and resolved in `mise.lock`.
-Renovate is configured in `.github/renovate.json` and extends the shared
+Renovate is configured in `.renovaterc.json5` and extends the shared
 `github>christfriedbalizou/renovate` preset.
 
 Renovate should open grouped pull requests for mise tool updates and maintain
