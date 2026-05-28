@@ -1,0 +1,30 @@
+[tools]
+python = "3.12.13"
+node = "22.22.3"
+just = "1.50.0"
+shellcheck = "0.11.0"
+shfmt = "3.13.1"
+ripgrep = "15.1.0"
+
+[env]
+VENV_REPO_ROOT = "{{ config_root }}"
+_.path = [
+  "{{ config_root }}/scripts",
+  "~/.local/bin",
+]
+
+[tasks.install]
+description = "Install the full current-user development environment"
+run = "scripts/install.sh"
+
+[tasks.dry-run]
+description = "Show setup actions without changing files"
+run = "VENV_DRY_RUN=1 scripts/install.sh"
+
+[tasks.check]
+description = "Run shell syntax and style checks"
+run = "bash -n bootstrap.sh scripts/*.sh && if command -v shellcheck >/dev/null 2>&1; then shellcheck bootstrap.sh scripts/create-workspace.sh scripts/install-*.sh scripts/lib.sh scripts/link-dotfiles.sh; else echo 'WARN shellcheck not installed'; fi"
+
+[tasks.fmt]
+description = "Format shell scripts"
+run = "if command -v shfmt >/dev/null 2>&1; then shfmt -w bootstrap.sh scripts/*.sh; else echo 'WARN shfmt not installed'; fi"

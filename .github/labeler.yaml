@@ -1,0 +1,49 @@
+---
+area/bash:
+  - changed-files:
+      - any-glob-to-any-file:
+          - dotfiles/bash/**/*
+
+area/docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - README.md
+
+area/github:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**/*
+
+area/just:
+  - changed-files:
+      - any-glob-to-any-file:
+          - justfile
+
+area/mise:
+  - changed-files:
+      - any-glob-to-any-file:
+          - mise.toml
+          - mise.lock
+
+area/renovate:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/renovate.json
+
+area/scripts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - bootstrap.sh
+          - scripts/**/*
+
+area/tmux:
+  - changed-files:
+      - any-glob-to-any-file:
+          - dotfiles/tmux/**/*
+
+area/vim:
+  - changed-files:
+      - any-glob-to-any-file:
+          - dotfiles/nvim/**/*
+          - dotfiles/vim/**/*
+          - scripts/install-vim.sh

@@ -1,48 +1,96 @@
 # Venv
 
-Venv is a personal Linux(Debian) based project created to setup my development environment and server workstation.
-You are allowed to use to setup you environment.
+Venv is my current-user development environment bootstrap. It configures bash,
+tmux, Vim/Neovim, workspace directories, and user-space development tools.
 
-## Getting started
+The setup is intentionally opinionated: there are no user-selection flags and no
+Ansible. Running the installer applies the full environment to the connected
+user.
 
-To first use the application, install using:
+## Install
+
 ```bash
-pip git+https://github.com/ChristfriedBalizou/venv.git#egg=venv
+./bootstrap.sh
 ```
 
-After installation run `venv --help` to see the command line help.
+After the first install, use:
 
-## Development
+```bash
+just install
+```
 
-The development environment aim to setup your `profile` and your development tool
-in my case `vim`.
+If `just` is not available in the current shell yet:
 
-### Profile
+```bash
+mise run install
+```
 
-The profile will setup and base bashrc file containing a numeros function
-like `extract` to decompress any zip, gz, ... files or `swap` to swap two
-file content and many other cool functions.
+## What It Does
 
-This part will create your working directories:
-- ${HOME}/src
-- ${HOME}/src/data
-- ${HOME}/src/tools
-- ${HOME}/src/github.com
+- Creates workspace directories:
+  - `~/src`
+  - `~/src/data`
+  - `~/src/tools`
+  - `~/src/github.com`
+- Installs optional system packages when passwordless `sudo` is available.
+- Installs `mise` for the current user when missing.
+- Installs development tools from `mise.toml`.
+- Installs Oh My Bash.
+- Links bash, tmux, and Neovim dotfiles into `$HOME`.
+- Installs `fzf` with a user-space fallback.
+- Installs the Vim runtime under `~/opt/vimrc.runtime`.
 
-Will install [fzf][1] for fuzzy search
-Will create your .bashrc and .bash_aliases
+## Safety
 
+The installer is designed to be rerunnable.
 
-### Vim
+- Existing files are backed up before replacement.
+- Network operations retry with backoff.
+- Optional system package failures warn and continue.
+- Logs are written to `~/.local/state/venv/install.log`.
+- Backups are written to `~/.local/state/venv/backups/`.
+- Desktop notifications are sent when `notify-send` or `terminal-notifier` is
+  available.
 
-Vim is my base editor and development tool. It was important to add plugins and
-tools to make it easy to code with.
+Preview changes without writing files:
 
-The base vimrc configuration comes from [amix/vimrc][2] and updated by my own
-plugings as [python-mode][3], [black][4] and ...
+```bash
+just dry-run
+```
 
+## Commands
 
-[1]: https://github.com/junegunn/fzf
-[2]: https://github.com/amix/vimrc
-[3]: https://github.com/python-mode/python-mode
-[4]: https://github.com/psf/black
+```bash
+just install      # full setup
+just dry-run      # preview actions
+just check        # shell syntax and shellcheck when available
+just fmt          # format shell scripts when shfmt is available
+just clean-state  # remove venv installer logs and backups
+```
+
+## Dependency Updates
+
+Tool versions are pinned in `mise.toml` and resolved in `mise.lock`.
+Renovate is configured in `.github/renovate.json` and extends the shared
+`github>christfriedbalizou/renovate` preset.
+
+Renovate should open grouped pull requests for mise tool updates and maintain
+the lock file when those versions change.
+
+Merged Renovate updates on `main` are tagged automatically by
+`.github/workflows/tag.yaml`.
+
+- `type/major` Renovate updates create the next `vMAJOR.0.0` tag.
+- `type/minor` Renovate updates create the next `vMAJOR.MINOR.0` tag.
+- `type/patch`, digest, pin, and lock-file updates create the next patch tag.
+
+## Layout
+
+```text
+bootstrap.sh       # fresh-machine entry point
+justfile           # local command runner
+mise.toml          # tool versions and mise tasks
+mise.lock          # resolved mise tool artifacts and checksums
+dotfiles/          # files linked into $HOME
+scripts/           # installer steps and shared safety helpers
+```
