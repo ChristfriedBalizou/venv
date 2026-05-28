@@ -22,6 +22,8 @@
 # Renovate Types
 - name: renovate/github-action
   color: "027fa0"
+- name: renovate/github-release
+  color: "027fa0"
 - name: renovate/mise
   color: "027fa0"
 - name: renovate/vim
