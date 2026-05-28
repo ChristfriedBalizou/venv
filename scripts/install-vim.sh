@@ -86,7 +86,7 @@ clone_or_checkout_ref() {
 
 main() {
   if ! has git; then
-    if [ "$VENV_DRY_RUN" = "1" ]; then
+    if [ "$DOTFILES_DRY_RUN" = "1" ]; then
       info "dry-run: git is not required for vim preview"
     else
       error "git is required to install vim runtime"
@@ -100,7 +100,7 @@ main() {
   IFS="|" read -r runtime_ref runtime_digest runtime_repository <<<"$vim_runtime"
   clone_or_checkout_ref "$runtime_ref" "$runtime_digest" "$runtime_repository" "$VIM_RUNTIME_DIR"
 
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     info "dry-run: mkdir -p $VIM_RUNTIME_DIR/my_plugins"
   else
     mkdir -p "$VIM_RUNTIME_DIR/my_plugins"
@@ -114,9 +114,9 @@ main() {
     clone_or_checkout_ref "$ref" "$digest" "$repository" "$destination" || warn "failed to install vim plugin $name"
   done
 
-  safe_symlink "$VENV_REPO_ROOT/dotfiles/vim/.config/venv/vim/my_configs.vim" "$VIM_RUNTIME_DIR/my_configs.vim"
+  safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/vim/.config/dotfiles/vim/my_configs.vim" "$VIM_RUNTIME_DIR/my_configs.vim"
 
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     info "dry-run: bash $VIM_RUNTIME_DIR/install_awesome_parameterized.sh $VIM_RUNTIME_DIR $USER"
     info "dry-run: link generated ~/.myvimrc to ~/.vimrc"
   elif [ -x "$VIM_RUNTIME_DIR/install_awesome_parameterized.sh" ]; then
@@ -125,7 +125,7 @@ main() {
     warn "amix vim installer not found; skipping generated ~/.vimrc"
   fi
 
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     :
   elif [ -f "$HOME/.myvimrc" ]; then
     safe_symlink "$HOME/.myvimrc" "$HOME/.vimrc"

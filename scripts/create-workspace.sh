@@ -17,7 +17,7 @@ main() {
 
   local directory
   for directory in "${directories[@]}"; do
-    if [ "$VENV_DRY_RUN" = "1" ]; then
+    if [ "$DOTFILES_DRY_RUN" = "1" ]; then
       info "dry-run: mkdir -p $directory"
     else
       mkdir -p "$directory"

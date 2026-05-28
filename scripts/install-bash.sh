@@ -9,10 +9,10 @@ main() {
   info "installing bash enhancements"
 
   if [ ! -f "$HOME/.bashrc.omb" ]; then
-    if [ "$VENV_DRY_RUN" = "1" ]; then
+    if [ "$DOTFILES_DRY_RUN" = "1" ]; then
       info "dry-run: install Oh My Bash"
     else
-      OSH="$HOME/.oh-my-bash" bash "$VENV_REPO_ROOT/scripts/oh-my-bash.sh" --unattended >>"$VENV_LOG_FILE" 2>&1 || warn "Oh My Bash install failed; continuing"
+      OSH="$HOME/.oh-my-bash" bash "$DOTFILES_REPO_ROOT/scripts/oh-my-bash.sh" --unattended >>"$DOTFILES_LOG_FILE" 2>&1 || warn "Oh My Bash install failed; continuing"
       if [ -f "$HOME/.bashrc.omb" ]; then
         sed -i "s/^OSH_THEME=.*/OSH_THEME='agnoster'/" "$HOME/.bashrc.omb" || true
       fi
@@ -25,8 +25,8 @@ main() {
   # shellcheck disable=SC2016
   mise_activation='if [ -x "$HOME/.local/bin/mise" ]; then eval "$("$HOME/.local/bin/mise" activate bash)"; fi'
 
-  append_once "$HOME/.profile" "# venv mise activation" "$mise_activation"
-  append_once "$HOME/.bash_profile" "# venv mise activation" "$mise_activation"
+  append_once "$HOME/.profile" "# dotfiles mise activation" "$mise_activation"
+  append_once "$HOME/.bash_profile" "# dotfiles mise activation" "$mise_activation"
 
   success "bash enhancement step complete"
 }

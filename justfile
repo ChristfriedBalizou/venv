@@ -13,7 +13,7 @@ bootstrap:
     @{{repo}}/bootstrap.sh
 
 dry-run:
-    @VENV_DRY_RUN=1 {{repo}}/scripts/install.sh
+    @DOTFILES_DRY_RUN=1 {{repo}}/scripts/install.sh
 
 check:
     @bash -n {{repo}}/bootstrap.sh {{repo}}/scripts/*.sh
@@ -23,4 +23,4 @@ fmt:
     @if command -v shfmt >/dev/null 2>&1; then shfmt -w {{repo}}/bootstrap.sh {{repo}}/scripts/*.sh; else echo "WARN shfmt not installed"; fi
 
 clean-state:
-    @rm -rf "$HOME/.local/state/venv"
+    @rm -rf "$HOME/.local/state/dotfiles"

@@ -1,6 +1,6 @@
-# Venv
+# Dotfiles
 
-Venv is my current-user development environment bootstrap. It configures bash,
+Dotfiles is my current-user development environment bootstrap. It configures bash,
 tmux, Vim/Neovim, workspace directories, and user-space development tools.
 
 The setup is intentionally opinionated: there are no user-selection flags and no
@@ -47,8 +47,8 @@ The installer is designed to be rerunnable.
 - Existing files are backed up before replacement.
 - Network operations retry with backoff.
 - Optional system package failures warn and continue.
-- Logs are written to `~/.local/state/venv/install.log`.
-- Backups are written to `~/.local/state/venv/backups/`.
+- Logs are written to `~/.local/state/dotfiles/install.log`.
+- Backups are written to `~/.local/state/dotfiles/backups/`.
 - Desktop notifications are sent when `notify-send` or `terminal-notifier` is
   available.
 
@@ -65,7 +65,7 @@ just install      # full setup
 just dry-run      # preview actions
 just check        # shell syntax and shellcheck when available
 just fmt          # format shell scripts when shfmt is available
-just clean-state  # remove venv installer logs and backups
+just clean-state  # remove dotfiles installer logs and backups
 ```
 
 ## Dependency Updates

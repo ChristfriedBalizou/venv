@@ -10,9 +10,9 @@ finish() {
   print_summary
 
   if [ "$status" -eq 0 ]; then
-    notify "venv setup complete" "Development environment installed for $USER."
+    notify "dotfiles setup complete" "Development environment installed for $USER."
   else
-    notify "venv setup failed" "See $VENV_LOG_FILE for details."
+    notify "dotfiles setup failed" "See $DOTFILES_LOG_FILE for details."
   fi
 
   exit "$status"
@@ -22,16 +22,16 @@ trap finish EXIT
 
 main() {
   info "starting current-user setup for $USER"
-  info "repo: $VENV_REPO_ROOT"
+  info "repo: $DOTFILES_REPO_ROOT"
 
-  "$VENV_REPO_ROOT/scripts/create-workspace.sh"
-  "$VENV_REPO_ROOT/scripts/install-system-packages.sh"
-  "$VENV_REPO_ROOT/scripts/install-mise.sh"
-  "$VENV_REPO_ROOT/scripts/install-tools.sh"
-  "$VENV_REPO_ROOT/scripts/install-bash.sh"
-  "$VENV_REPO_ROOT/scripts/link-dotfiles.sh"
-  "$VENV_REPO_ROOT/scripts/install-fzf.sh"
-  "$VENV_REPO_ROOT/scripts/install-vim.sh"
+  "$DOTFILES_REPO_ROOT/scripts/create-workspace.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-system-packages.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-mise.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-tools.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-bash.sh"
+  "$DOTFILES_REPO_ROOT/scripts/link-dotfiles.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-fzf.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-vim.sh"
 
   success "current-user setup complete"
 }

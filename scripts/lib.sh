@@ -2,35 +2,35 @@
 
 set -Eeuo pipefail
 
-VENV_REPO_ROOT="${VENV_REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-VENV_STATE_DIR="${VENV_STATE_DIR:-$HOME/.local/state/venv}"
-VENV_LOG_FILE="${VENV_LOG_FILE:-$VENV_STATE_DIR/install.log}"
-VENV_BACKUP_DIR="${VENV_BACKUP_DIR:-$VENV_STATE_DIR/backups/$(date +%Y%m%d-%H%M%S)}"
-VENV_SUMMARY_FILE="${VENV_SUMMARY_FILE:-$VENV_STATE_DIR/summary.$$.log}"
-VENV_DRY_RUN="${VENV_DRY_RUN:-0}"
+DOTFILES_REPO_ROOT="${DOTFILES_REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+DOTFILES_STATE_DIR="${DOTFILES_STATE_DIR:-$HOME/.local/state/dotfiles}"
+DOTFILES_LOG_FILE="${DOTFILES_LOG_FILE:-$DOTFILES_STATE_DIR/install.log}"
+DOTFILES_BACKUP_DIR="${DOTFILES_BACKUP_DIR:-$DOTFILES_STATE_DIR/backups/$(date +%Y%m%d-%H%M%S)}"
+DOTFILES_SUMMARY_FILE="${DOTFILES_SUMMARY_FILE:-$DOTFILES_STATE_DIR/summary.$$.log}"
+DOTFILES_DRY_RUN="${DOTFILES_DRY_RUN:-0}"
 
-export VENV_REPO_ROOT
-export VENV_STATE_DIR
-export VENV_LOG_FILE
-export VENV_BACKUP_DIR
-export VENV_SUMMARY_FILE
-export VENV_DRY_RUN
+export DOTFILES_REPO_ROOT
+export DOTFILES_STATE_DIR
+export DOTFILES_LOG_FILE
+export DOTFILES_BACKUP_DIR
+export DOTFILES_SUMMARY_FILE
+export DOTFILES_DRY_RUN
 
-mkdir -p "$VENV_STATE_DIR"
-touch "$VENV_LOG_FILE" "$VENV_SUMMARY_FILE"
+mkdir -p "$DOTFILES_STATE_DIR"
+touch "$DOTFILES_LOG_FILE" "$DOTFILES_SUMMARY_FILE"
 
 if [ -t 1 ]; then
-  VENV_RED="$(printf '\033[31m')"
-  VENV_GREEN="$(printf '\033[32m')"
-  VENV_YELLOW="$(printf '\033[33m')"
-  VENV_BLUE="$(printf '\033[34m')"
-  VENV_RESET="$(printf '\033[0m')"
+  DOTFILES_RED="$(printf '\033[31m')"
+  DOTFILES_GREEN="$(printf '\033[32m')"
+  DOTFILES_YELLOW="$(printf '\033[33m')"
+  DOTFILES_BLUE="$(printf '\033[34m')"
+  DOTFILES_RESET="$(printf '\033[0m')"
 else
-  VENV_RED=""
-  VENV_GREEN=""
-  VENV_YELLOW=""
-  VENV_BLUE=""
-  VENV_RESET=""
+  DOTFILES_RED=""
+  DOTFILES_GREEN=""
+  DOTFILES_YELLOW=""
+  DOTFILES_BLUE=""
+  DOTFILES_RESET=""
 fi
 
 timestamp() {
@@ -38,30 +38,30 @@ timestamp() {
 }
 
 log_line() {
-  printf '[%s] %s\n' "$(timestamp)" "$*" >>"$VENV_LOG_FILE"
+  printf '[%s] %s\n' "$(timestamp)" "$*" >>"$DOTFILES_LOG_FILE"
 }
 
 info() {
-  printf '%s==>%s %s\n' "$VENV_BLUE" "$VENV_RESET" "$*"
+  printf '%s==>%s %s\n' "$DOTFILES_BLUE" "$DOTFILES_RESET" "$*"
   log_line "INFO $*"
 }
 
 success() {
-  printf '%sOK%s %s\n' "$VENV_GREEN" "$VENV_RESET" "$*"
+  printf '%sOK%s %s\n' "$DOTFILES_GREEN" "$DOTFILES_RESET" "$*"
   log_line "OK $*"
-  printf 'OK %s\n' "$*" >>"$VENV_SUMMARY_FILE"
+  printf 'OK %s\n' "$*" >>"$DOTFILES_SUMMARY_FILE"
 }
 
 warn() {
-  printf '%sWARN%s %s\n' "$VENV_YELLOW" "$VENV_RESET" "$*" >&2
+  printf '%sWARN%s %s\n' "$DOTFILES_YELLOW" "$DOTFILES_RESET" "$*" >&2
   log_line "WARN $*"
-  printf 'WARN %s\n' "$*" >>"$VENV_SUMMARY_FILE"
+  printf 'WARN %s\n' "$*" >>"$DOTFILES_SUMMARY_FILE"
 }
 
 error() {
-  printf '%sERROR%s %s\n' "$VENV_RED" "$VENV_RESET" "$*" >&2
+  printf '%sERROR%s %s\n' "$DOTFILES_RED" "$DOTFILES_RESET" "$*" >&2
   log_line "ERROR $*"
-  printf 'ERROR %s\n' "$*" >>"$VENV_SUMMARY_FILE"
+  printf 'ERROR %s\n' "$*" >>"$DOTFILES_SUMMARY_FILE"
 }
 
 has() {
@@ -70,11 +70,11 @@ has() {
 
 run() {
   log_line "RUN $*"
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     info "dry-run: $*"
     return 0
   fi
-  "$@" >>"$VENV_LOG_FILE" 2>&1
+  "$@" >>"$DOTFILES_LOG_FILE" 2>&1
 }
 
 retry() {
@@ -117,14 +117,14 @@ backup_path() {
     return 0
   fi
 
-  local destination="$VENV_BACKUP_DIR/${path#"$HOME"/}"
+  local destination="$DOTFILES_BACKUP_DIR/${path#"$HOME"/}"
 
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     info "dry-run: backup $path -> $destination"
     return 0
   fi
 
-  mkdir -p "$VENV_BACKUP_DIR"
+  mkdir -p "$DOTFILES_BACKUP_DIR"
   mkdir -p "$(dirname "$destination")"
   mv "$path" "$destination"
   success "backed up $path"
@@ -146,7 +146,7 @@ safe_symlink() {
 
   backup_path "$target"
 
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     info "dry-run: ln -s $source $target"
     return 0
   fi
@@ -166,7 +166,7 @@ append_once() {
     return 0
   fi
 
-  if [ "$VENV_DRY_RUN" = "1" ]; then
+  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
     info "dry-run: append marker $marker to $file"
     return 0
   fi
@@ -191,10 +191,10 @@ notify() {
 
 print_summary() {
   info "summary"
-  if [ -s "$VENV_SUMMARY_FILE" ]; then
-    sed 's/^/  /' "$VENV_SUMMARY_FILE"
+  if [ -s "$DOTFILES_SUMMARY_FILE" ]; then
+    sed 's/^/  /' "$DOTFILES_SUMMARY_FILE"
   else
     printf '  No changes recorded.\n'
   fi
-  info "log: $VENV_LOG_FILE"
+  info "log: $DOTFILES_LOG_FILE"
 }

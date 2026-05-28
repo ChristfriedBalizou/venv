@@ -7,7 +7,7 @@ shfmt = "3.13.1"
 ripgrep = "15.1.0"
 
 [env]
-VENV_REPO_ROOT = "{{ config_root }}"
+DOTFILES_REPO_ROOT = "{{ config_root }}"
 _.path = [
   "{{ config_root }}/scripts",
   "~/.local/bin",
@@ -19,7 +19,7 @@ run = "scripts/install.sh"
 
 [tasks.dry-run]
 description = "Show setup actions without changing files"
-run = "VENV_DRY_RUN=1 scripts/install.sh"
+run = "DOTFILES_DRY_RUN=1 scripts/install.sh"
 
 [tasks.check]
 description = "Run shell syntax and style checks"
