@@ -28,7 +28,7 @@ plugins=(
   # renovate: datasource=github-tags depName=psf/black versioning=semver-coerced
   "26.5.1|87928e6d6761a4a6d22250e1fee5601b3998086e|https://github.com/psf/black.git"
   # renovate: datasource=github-tags depName=vim-syntastic/syntastic versioning=semver-coerced
-  "v0.5.7|3aa7111de454205a681646cd86896b2832a2ed5e|https://github.com/vim-syntastic/syntastic.git"
+  "3.10.0|767b4f3b3ed9567c13568b9eff1b302638abedd9|https://github.com/vim-syntastic/syntastic.git"
   # renovate: datasource=github-tags depName=tpope/vim-fugitive versioning=semver-coerced
   "v3.7|ada7c112671a4b8a2ab9541315dd729343949174|https://github.com/tpope/vim-fugitive.git"
   # renovate: datasource=github-tags depName=xolox/vim-misc versioning=semver-coerced
