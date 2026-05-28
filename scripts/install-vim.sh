@@ -16,11 +16,11 @@ plugins=(
   # renovate: datasource=github-tags depName=preservim/tagbar versioning=semver-coerced
   "v3.1.1|6c3e15ea4a1ef9619c248c2b1eced56a47b61a9e|https://github.com/preservim/tagbar.git"
   # renovate: datasource=github-tags depName=preservim/nerdtree versioning=semver-coerced
-  "7.1.3|cccc567626b9eac4c9c04c726e875af5866baaa8|https://github.com/preservim/nerdtree.git"
+  "7.1.3|9b465acb2745beb988eff3c1e4aa75f349738230|https://github.com/preservim/nerdtree.git"
   # renovate: datasource=github-tags depName=preservim/nerdcommenter versioning=semver-coerced
-  "2.7.0|1506e9632915a9f237f6898a80c094e502d23d80|https://github.com/preservim/nerdcommenter.git"
+  "2.7.0|f575c18d05bb237ac6c62d972f10784b34be9bbe|https://github.com/preservim/nerdcommenter.git"
   # renovate: datasource=github-tags depName=vim-airline/vim-airline versioning=semver-coerced
-  "v0.12|07e877ee729695d50fd27fca2e80ce08bc08d140|https://github.com/vim-airline/vim-airline.git"
+  "v0.12|1586662296c9dc946083e17cb6a4ef0b3e7c0d68|https://github.com/vim-airline/vim-airline.git"
   # renovate: datasource=git-refs packageName=https://github.com/vim-airline/vim-airline-themes currentValue=master
   "master|77aab8c6cf7179ddb8a05741da7e358a86b2c3ab|https://github.com/vim-airline/vim-airline-themes.git"
   # renovate: datasource=github-tags depName=morhetz/gruvbox versioning=semver-coerced
@@ -30,7 +30,7 @@ plugins=(
   # renovate: datasource=github-tags depName=vim-syntastic/syntastic versioning=semver-coerced
   "3.10.0|767b4f3b3ed9567c13568b9eff1b302638abedd9|https://github.com/vim-syntastic/syntastic.git"
   # renovate: datasource=github-tags depName=tpope/vim-fugitive versioning=semver-coerced
-  "v3.7|ada7c112671a4b8a2ab9541315dd729343949174|https://github.com/tpope/vim-fugitive.git"
+  "v3.7|96c1009fcf8ce60161cc938d149dd5a66d570756|https://github.com/tpope/vim-fugitive.git"
   # renovate: datasource=github-tags depName=xolox/vim-misc versioning=semver-coerced
   "1.17.6|3e6b8fb6f03f13434543ce1f5d24f6a5d3f34f0b|https://github.com/xolox/vim-misc.git"
   # renovate: datasource=github-tags depName=xolox/vim-session versioning=semver-coerced
@@ -38,11 +38,11 @@ plugins=(
   # renovate: datasource=github-tags depName=phpactor/phpactor versioning=semver-coerced
   "2025.12.21.1|dbad0a9aad7be178b914f430b573d970f271b455|https://github.com/phpactor/phpactor.git"
   # renovate: datasource=github-tags depName=tpope/vim-commentary versioning=semver-coerced
-  "v1.3|7eed6386893fd14776ed70844be79dd568a23c45|https://github.com/tpope/vim-commentary.git"
+  "v1.3|34976d96b61d49cafce624cdd947317111c43bd8|https://github.com/tpope/vim-commentary.git"
   # renovate: datasource=github-tags depName=tpope/vim-surround versioning=semver-coerced
-  "v2.2|de3e4e5b0769166b4dd139a50563749909f7657c|https://github.com/tpope/vim-surround.git"
+  "v2.2|aeb933272e72617f7c4d35e1f003be16836b948d|https://github.com/tpope/vim-surround.git"
   # renovate: datasource=github-tags depName=tpope/vim-repeat versioning=semver-coerced
-  "v1.2|af8dcd3c04f2de98e38eb291995be2b3e1f27366|https://github.com/tpope/vim-repeat.git"
+  "v1.2|8106e142dfdc278ff3eaaadd7b362ad7949d4357|https://github.com/tpope/vim-repeat.git"
   # renovate: datasource=github-tags depName=github/copilot.vim versioning=semver-coerced
   "v1.59.0|a12fd5672110c8aa7e3c8419e28c96943ca179be|https://github.com/github/copilot.vim.git"
   # renovate: datasource=github-tags depName=ryanoasis/vim-devicons versioning=semver-coerced
