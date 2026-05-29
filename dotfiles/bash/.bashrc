@@ -117,3 +117,11 @@ DISABLE_UPDATE_PROMPT=true
 if [ -f $HOME/.bashrc.omb ]; then
     . $HOME/.bashrc.omb
 fi
+eval "$(mise activate bash)"
+
+# Fuzzy-jump under $HOME/src.
+# Examples: src, src g, src g h b, src v teleport
+unalias src 2>/dev/null
+function src {
+    __src_match "$HOME/src" "$@"
+}

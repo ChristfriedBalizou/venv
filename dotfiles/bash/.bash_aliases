@@ -66,21 +66,18 @@ alias j='jobs -l'
 alias which='type -a'
 alias ..='cd ..'
 
-# Git directory accessibility aliases
-alias cdg='cd $HOME/src/github.com'   # Go to user github directory
-alias cds='cd $HOME/src'    # Go to source directory
-alias cdt='cd $HOME/src/tools'   # Access tools directory
-alias cdd='cd $HOME/src/data'   # Access data directory
-alias cdo=user_github_organization   # Go to github organization
+__bash_aliases_path="$(readlink -f "${BASH_SOURCE[0]}")"
+__dotfiles_repo_root="$(dirname "$(dirname "$(dirname "$__bash_aliases_path")")")"
+__src_jump_script="$__dotfiles_repo_root/scripts/src-jump.py"
+unset __bash_aliases_path __dotfiles_repo_root
 
-# Go to git organization
-# Git should be located under /home/{user}/src/github
-user_github_organization() {
-    if [ $# -gt 0 ]; then
-        cdg && cd $1
-    else
-        cdg
-    fi
+__src_match() {
+    local root="$1"
+    local destination
+    shift
+
+    destination="$(python3 "$__src_jump_script" "$root" "$@")" || return
+    cd "$destination"
 }
 
 # Pretty-print of some PATH variables:
