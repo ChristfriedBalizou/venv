@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: Force a bump type, or auto-detect from merged Renovate PRs
+        description: Force a bump type, or auto-detect from changed code and Renovate PRs
         required: true
         default: auto
         type: choice
@@ -156,10 +156,14 @@ jobs:
                 const candidate = classifyPullRequest(pullRequest);
                 if (bumpRank[candidate] > bumpRank[bump]) bump = candidate;
               }
+
+              if (bump === "none" && commits.length > 0) {
+                bump = "patch";
+              }
             }
 
             if (bump === "none") {
-              core.notice("No Renovate dependency updates found; no tag will be created.");
+              core.notice("No changes since the previous tag; no tag will be created.");
               core.setOutput("should_tag", "false");
               return;
             }
@@ -177,9 +181,13 @@ jobs:
             }
 
             const nextTag = `v${nextVersion.join(".")}`;
-            const summary = renovatePullRequests
+            const renovateSummary = renovatePullRequests
               .map((pullRequest) => `#${pullRequest.number} ${pullRequest.title}`)
               .join("\n");
+            const changeSummary = previousTag
+              ? `Code changes since ${previousTag.name}.`
+              : "Initial tag for existing code.";
+            const summary = renovateSummary || changeSummary;
 
             core.notice(`Previous tag: ${previousTag?.name || "none"}`);
             core.notice(`Bump: ${bump}`);
@@ -192,7 +200,7 @@ jobs:
               "",
               `Bump: ${bump}`,
               "",
-              summary || "Manual tag workflow run.",
+              summary,
             ].join("\n"));
 
       - name: Create Tag
