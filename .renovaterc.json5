@@ -1,8 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["github>christfriedbalizou/renovate"],
-  onboarding: true,
-  requireConfig: "optional",
   dependencyDashboardTitle: "Renovate Dashboard 🤖",
   suppressNotifications: [
     "prIgnoreNotification",
