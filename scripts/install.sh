@@ -28,6 +28,7 @@ main() {
   "$DOTFILES_REPO_ROOT/scripts/install-system-packages.sh"
   "$DOTFILES_REPO_ROOT/scripts/install-mise.sh"
   "$DOTFILES_REPO_ROOT/scripts/install-tools.sh"
+  "$DOTFILES_REPO_ROOT/scripts/configure-git.sh"
   "$DOTFILES_REPO_ROOT/scripts/install-bash.sh"
   "$DOTFILES_REPO_ROOT/scripts/link-dotfiles.sh"
   "$DOTFILES_REPO_ROOT/scripts/install-fzf.sh"
