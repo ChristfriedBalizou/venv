@@ -125,3 +125,61 @@ unalias src 2>/dev/null
 function src {
     __src_match "$HOME/src" "$@"
 }
+
+__src_complete_child() {
+    local base="$1"
+    local query="$2"
+    local child name clean
+    local -a matches=()
+
+    [ -d "$base" ] || return 1
+
+    for child in "$base"/*; do
+        [ -d "$child" ] || continue
+        name="${child##*/}"
+        clean="${name%.git}"
+
+        if [[ "$name" == "$query" || "$clean" == "$query" ]]; then
+            printf '%s\n' "$child"
+            return 0
+        fi
+
+        if [[ "$name" == "$query"* || "$clean" == "$query"* ]]; then
+            matches+=("$child")
+        fi
+    done
+
+    if [ "${#matches[@]}" -eq 1 ]; then
+        printf '%s\n' "${matches[0]}"
+        return 0
+    fi
+
+    return 1
+}
+
+__src_complete() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local base="$HOME/src"
+    local word child name clean
+    local -a candidates=()
+
+    for word in "${COMP_WORDS[@]:1:COMP_CWORD-1}"; do
+        child="$(__src_complete_child "$base" "$word")" || return 0
+        base="$child"
+    done
+
+    [ -d "$base" ] || return 0
+
+    for child in "$base"/*; do
+        [ -d "$child" ] || continue
+        name="${child##*/}"
+        clean="${name%.git}"
+
+        if [[ "$name" == "$cur"* || "$clean" == "$cur"* ]]; then
+            candidates+=("$clean")
+        fi
+    done
+
+    mapfile -t COMPREPLY < <(compgen -W "${candidates[*]}" -- "$cur")
+}
+complete -F __src_complete src
