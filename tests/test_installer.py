@@ -11,7 +11,10 @@ from pathlib import Path
 
 import pytest
 
+from dotfiles_installer.commands import CommandRunner
+from dotfiles_installer.context import InstallContext
 from dotfiles_installer.installer import (
+    configure_git,
     detect_os,
     download,
     extract_tar_archive,
@@ -31,6 +34,27 @@ def test_download_rejects_non_https(tmp_path: Path) -> None:
 
 def test_detect_os_returns_identifier() -> None:
     assert detect_os()
+
+
+def test_optional_git_is_resolved_by_lincl(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    context = InstallContext(
+        tmp_path,
+        home,
+        tmp_path / "state",
+        False,
+        CommandRunner(),
+    )
+    monkeypatch.setenv("PATH", str(tmp_path / "empty-path"))
+
+    configure_git(context)
+
+    assert "git unavailable" in caplog.text
 
 
 def test_archive_path_traversal_is_rejected(tmp_path: Path) -> None:

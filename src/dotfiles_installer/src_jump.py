@@ -3,11 +3,10 @@
 import argparse
 import difflib
 import logging
-import shutil
 import sys
 from pathlib import Path
 
-from lincl import ExecutionOptions
+from lincl import CommandNotFoundError, ExecutionOptions
 from lincl.exceptions import CommandError
 
 logger = logging.getLogger(__name__)
@@ -61,9 +60,10 @@ def prefix_match(candidates: list[Path], query: str) -> Path | None:
 
 
 def fzf_match(candidates: list[Path], query: str) -> Path | None:
-    if not shutil.which("fzf"):
+    try:
+        from lincl import fzf
+    except CommandNotFoundError:
         return None
-    from lincl import fzf
 
     candidate_text = "\n".join(str(candidate) for candidate in candidates)
     try:

@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import os
 import shlex
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -33,10 +32,6 @@ class CommandRunner:
 
     def __init__(self, dry_run: bool = False) -> None:
         self.dry_run = dry_run
-
-    def available(self, executable: str) -> bool:
-        """Return whether an executable is discoverable through PATH."""
-        return shutil.which(executable) is not None
 
     def run(
         self,

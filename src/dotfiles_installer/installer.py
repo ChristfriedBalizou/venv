@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
+from lincl import CommandCallable, CommandNotFoundError
+
 from dotfiles_installer.commands import CommandError
 from dotfiles_installer.context import InstallContext
 
@@ -270,10 +272,11 @@ def detect_os() -> str:
 
 def install_system_packages(context: InstallContext) -> None:
     """Install optional packages when non-interactive sudo is available."""
-    if not context.runner.available("sudo"):
+    try:
+        from lincl import sudo
+    except CommandNotFoundError:
         logger.warning("sudo unavailable; skipping optional system packages")
         return
-    from lincl import sudo
 
     try:
         context.runner.run(sudo, ("-n", "true"))
@@ -295,9 +298,17 @@ def install_system_packages(context: InstallContext) -> None:
             ),
             "apt package installation",
         )
-        install_first_editor(context, "apt-get", ("vim", "vim-nox", "neovim"))
+        install_first_editor(
+            context,
+            sudo,
+            "apt-get",
+            ("vim", "vim-nox", "neovim"),
+        )
     elif os_id in {"fedora", "rhel", "centos"}:
-        manager = "dnf" if context.runner.available("dnf") else "yum"
+        manager = rpm_package_manager()
+        if manager is None:
+            logger.warning("dnf and yum unavailable; skipping system packages")
+            return
         retry(
             lambda: context.runner.run(
                 sudo, (manager, "install", "-y", *RPM_PACKAGES)
@@ -305,24 +316,43 @@ def install_system_packages(context: InstallContext) -> None:
             f"{manager} package installation",
         )
         install_first_editor(
-            context, manager, ("vim-enhanced", "vim", "neovim")
+            context,
+            sudo,
+            manager,
+            ("vim-enhanced", "vim", "neovim"),
         )
     else:
         logger.warning("unsupported OS %s; skipping system packages", os_id)
 
 
+def rpm_package_manager() -> str | None:
+    """Return the preferred available RPM package manager."""
+    try:
+        from lincl import dnf
+
+        return Path(dnf.executable).name
+    except CommandNotFoundError:
+        try:
+            from lincl import yum
+
+            return Path(yum.executable).name
+        except CommandNotFoundError:
+            return None
+
+
 def install_first_editor(
-    context: InstallContext, manager: str, packages: tuple[str, ...]
+    context: InstallContext,
+    sudo_command: CommandCallable[str],
+    manager: str,
+    packages: tuple[str, ...],
 ) -> None:
     """Install the first available editor package from an ordered list."""
-    from lincl import sudo
-
     for package in packages:
         arguments = (manager, "install", "--yes", package)
         if manager != "apt-get":
             arguments = (manager, "install", "-y", package)
         try:
-            context.runner.run(sudo, arguments)
+            context.runner.run(sudo_command, arguments)
             return
         except CommandError:
             logger.warning("editor package unavailable: %s", package)
@@ -381,26 +411,34 @@ def install_tools(context: InstallContext) -> None:
 
 def configure_git(context: InstallContext) -> None:
     """Configure the default Git editor when Git is installed."""
-    if context.runner.available("git"):
+    try:
         from lincl import git
+    except CommandNotFoundError:
+        logger.warning("git unavailable; skipping Git configuration")
+        return
 
-        context.runner.run(git, ("config", "--global", "core.editor", "vim"))
+    context.runner.run(git, ("config", "--global", "core.editor", "vim"))
 
 
 def install_bash(context: InstallContext) -> None:
     """Install Oh My Bash and persistent mise activation."""
     bashrc = context.home / ".bashrc.omb"
     oh_my_bash = context.home / ".oh-my-bash"
+    git_command: CommandCallable[str] | None = None
     if not bashrc.exists():
         if context.dry_run:
             logger.info("dry-run: install Oh My Bash")
-        elif context.runner.available("git"):
-            from lincl import git
+        else:
+            try:
+                from lincl import git as git_command
+            except CommandNotFoundError:
+                logger.warning("git unavailable; skipping Oh My Bash")
 
+        if git_command is not None:
             if oh_my_bash.exists():
                 context.backup(oh_my_bash)
             context.runner.run(
-                git,
+                git_command,
                 (
                     "clone",
                     "--depth=1",
@@ -438,12 +476,20 @@ def link_dotfiles(context: InstallContext) -> None:
 
 def install_fzf(context: InstallContext) -> None:
     """Install fzf under HOME when no executable is already available."""
-    if context.runner.available("fzf"):
+    try:
+        from lincl import fzf
+
+        logger.debug("fzf already available at %s", fzf.executable)
         return
-    if not context.runner.available("git"):
+    except CommandNotFoundError:
+        pass
+    from lincl import env
+
+    try:
+        from lincl import git
+    except CommandNotFoundError:
         logger.warning("git unavailable; skipping fzf fallback")
         return
-    from lincl import env, git
 
     destination = context.home / ".fzf"
     if not (destination / ".git").exists():
@@ -506,18 +552,22 @@ def install_blesh(context: InstallContext) -> None:
 
 
 def checkout_source(
-    context: InstallContext, source: GitSource, destination: Path
+    context: InstallContext,
+    git_command: CommandCallable[str] | None,
+    source: GitSource,
+    destination: Path,
 ) -> None:
     """Converge a Git checkout on its pinned commit."""
     if context.dry_run:
         logger.info("dry-run: checkout %s at %s", source.name, source.commit)
         return
-    from lincl import git
+    if git_command is None:
+        raise RuntimeError("git is required for a non-preview checkout")
 
     if (destination / ".git").exists():
         try:
             context.runner.run(
-                git,
+                git_command,
                 (
                     "-C",
                     destination,
@@ -530,14 +580,16 @@ def checkout_source(
             )
         except CommandError:
             context.runner.run(
-                git, ("-C", destination, "fetch", "origin", source.reference)
+                git_command,
+                ("-C", destination, "fetch", "origin", source.reference),
             )
     else:
         context.runner.run(
-            git, ("clone", "--no-checkout", source.repository, destination)
+            git_command,
+            ("clone", "--no-checkout", source.repository, destination),
         )
         context.runner.run(
-            git,
+            git_command,
             (
                 "-C",
                 destination,
@@ -549,27 +601,39 @@ def checkout_source(
             ),
         )
     context.runner.run(
-        git, ("-C", destination, "checkout", "--detach", source.commit)
+        git_command,
+        ("-C", destination, "checkout", "--detach", source.commit),
     )
     context.runner.run(
-        git,
+        git_command,
         ("-C", destination, "submodule", "update", "--init", "--recursive"),
     )
 
 
 def install_vim(context: InstallContext) -> None:
     """Install the pinned Vim runtime and plugins."""
-    if not context.runner.available("git") and not context.dry_run:
-        raise RuntimeError("git is required to install the Vim runtime")
+    git_command: CommandCallable[str] | None = None
+    if not context.dry_run:
+        try:
+            from lincl import git as git_command
+        except CommandNotFoundError as error:
+            raise RuntimeError(
+                "git is required to install the Vim runtime"
+            ) from error
     runtime = Path(
         os.environ.get("VIM_RUNTIME_DIR", context.home / "opt/vimrc.runtime")
     )
-    checkout_source(context, VIM_RUNTIME, runtime)
+    checkout_source(context, git_command, VIM_RUNTIME, runtime)
     plugins = runtime / "my_plugins"
     context.create_directory(plugins)
     for source in VIM_PLUGINS:
         try:
-            checkout_source(context, source, plugins / source.name)
+            checkout_source(
+                context,
+                git_command,
+                source,
+                plugins / source.name,
+            )
         except CommandError:
             logger.warning(
                 "failed to install optional Vim plugin %s", source.name
