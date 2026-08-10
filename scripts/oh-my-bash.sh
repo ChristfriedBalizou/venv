@@ -4,21 +4,13 @@ main() {
   # Use colors, but only if connected to a terminal, and that terminal
   # supports them.
   if which tput >/dev/null 2>&1; then
-      ncolors=$(tput colors)
+    ncolors=$(tput colors)
   fi
   if [ -t 1 ] && [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
-    RED="$(tput setaf 1)"
-    GREEN="$(tput setaf 2)"
-    YELLOW="$(tput setaf 3)"
     BLUE="$(tput setaf 4)"
-    BOLD="$(tput bold)"
     NORMAL="$(tput sgr0)"
   else
-    RED=""
-    GREEN=""
-    YELLOW=""
     BLUE=""
-    BOLD=""
     NORMAL=""
   fi
 
@@ -28,21 +20,27 @@ main() {
 
   # Checks the minium version of bash (v4) installed,
   # stops the installation if check fails
-  if [ -n $BASH_VERSION ]; then
-     bash_major_version=$(echo $BASH_VERSION | cut -d '.' -f 1)
-     if [ "${bash_major_version}" -lt "4" ]; then
-        printf "Error: Bash 4 required for Oh My Bash.\n"
-        printf "Error: Upgrade Bash and try again.\n"
-        exit 1
-     fi
+  if [ -n "$BASH_VERSION" ]; then
+    bash_major_version="${BASH_VERSION%%.*}"
+    if [ "$bash_major_version" -lt 4 ]; then
+      printf "Error: Bash 4 required for Oh My Bash.\n"
+      printf "Error: Upgrade Bash and try again.\n"
+      exit 1
+    fi
   fi
 
-  if [ ! -n "$OSH" ]; then
-    OSH=$HOME/.oh-my-bash
+  if [ -z "${OSH:-}" ]; then
+    OSH="$HOME/.oh-my-bash"
   fi
 
   if [ -d "$OSH" ]; then
-      rm -rf $OSH
+    case "$OSH" in
+      "$HOME"/*) rm -rf "$OSH" ;;
+      *)
+        printf 'Error: refusing to replace Oh My Bash outside HOME: %s\n' "$OSH" >&2
+        exit 1
+        ;;
+    esac
   fi
 
   # Prevent the cloned repository from having insecure permissions. Failing to do
@@ -52,30 +50,30 @@ main() {
   # precedence over umasks except for filesystems mounted with option "noacl".
   umask g-w,o-w
 
-  printf "${BLUE}Cloning Oh My Bash...${NORMAL}\n"
+  printf '%sCloning Oh My Bash...%s\n' "$BLUE" "$NORMAL"
   hash git >/dev/null 2>&1 || {
     echo "Error: git is not installed"
     exit 1
   }
   # The Windows (MSYS) Git is not compatible with normal use on cygwin
   if [ "$OSTYPE" = cygwin ]; then
-    if git --version | grep msysgit > /dev/null; then
+    if git --version | grep msysgit >/dev/null; then
       echo "Error: Windows/MSYS Git is not supported on Cygwin"
       echo "Error: Make sure the Cygwin git package is installed and is first on the path"
       exit 1
     fi
   fi
-  env git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git $OSH || {
+  env git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git "$OSH" || {
     printf "Error: git clone of oh-my-bash repo failed\n"
     exit 1
   }
 
-  printf "${BLUE}Using the Oh My Bash template file and adding it to ~/.bashrc${NORMAL}\n"
-  cp $OSH/templates/bashrc.osh-template $HOME/.bashrc.omb
+  printf '%sUsing the Oh My Bash template file and adding it to ~/.bashrc%s\n' "$BLUE" "$NORMAL"
+  cp "$OSH/templates/bashrc.osh-template" "$HOME/.bashrc.omb"
   sed "/^export OSH=/ c\\
 export OSH=$OSH
-  " $HOME/.bashrc.omb > $HOME/.bashrc-ombtemp
-  mv -f $HOME/.bashrc-ombtemp $HOME/.bashrc.omb
+  " "$HOME/.bashrc.omb" >"$HOME/.bashrc-ombtemp"
+  mv -f "$HOME/.bashrc-ombtemp" "$HOME/.bashrc.omb"
 }
 
 main

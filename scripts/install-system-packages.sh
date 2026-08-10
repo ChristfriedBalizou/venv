@@ -31,7 +31,6 @@ APT_EDITOR_FALLBACKS=(
 DNF_PACKAGES=(
   bash
   ca-certificates
-  curl
   git
   tmux
   unzip
@@ -40,11 +39,6 @@ DNF_PACKAGES=(
   gcc-c++
   make
   cmake
-  powerline-fonts
-  ripgrep
-  ShellCheck
-  shfmt
-  fzf
 )
 
 DNF_EDITOR_FALLBACKS=(

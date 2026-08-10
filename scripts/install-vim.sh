@@ -122,23 +122,6 @@ main() {
 
   safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/vim/.config/dotfiles/vim/my_configs.vim" "$VIM_RUNTIME_DIR/my_configs.vim"
 
-  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
-    info "dry-run: bash $VIM_RUNTIME_DIR/install_awesome_parameterized.sh $VIM_RUNTIME_DIR $USER"
-    info "dry-run: link generated ~/.myvimrc to ~/.vimrc"
-  elif [ -x "$VIM_RUNTIME_DIR/install_awesome_parameterized.sh" ]; then
-    retry 3 bash "$VIM_RUNTIME_DIR/install_awesome_parameterized.sh" "$VIM_RUNTIME_DIR" "$USER" || warn "amix vim installer failed"
-  else
-    warn "amix vim installer not found; skipping generated ~/.vimrc"
-  fi
-
-  if [ "$DOTFILES_DRY_RUN" = "1" ]; then
-    :
-  elif [ -f "$HOME/.myvimrc" ]; then
-    safe_symlink "$HOME/.myvimrc" "$HOME/.vimrc"
-  else
-    warn "$HOME/.myvimrc not found after vim install"
-  fi
-
   success "vim setup complete"
 }
 

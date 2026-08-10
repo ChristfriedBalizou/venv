@@ -12,6 +12,7 @@ main() {
   safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/bash/.bash_aliases" "$HOME/.bash_aliases"
   safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/bash/.blerc" "$HOME/.blerc"
   safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
+  safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/vim/.vimrc" "$HOME/.vimrc"
   safe_symlink "$DOTFILES_REPO_ROOT/dotfiles/nvim/.config/nvim/init.vim" "$HOME/.config/nvim/init.vim"
 
   success "dotfile linking complete"

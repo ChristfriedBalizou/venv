@@ -23,8 +23,8 @@ run = "DOTFILES_DRY_RUN=1 scripts/install.sh"
 
 [tasks.check]
 description = "Run shell syntax and style checks"
-run = "bash -n bootstrap.sh scripts/*.sh && if command -v shellcheck >/dev/null 2>&1; then shellcheck bootstrap.sh scripts/create-workspace.sh scripts/install-*.sh scripts/lib.sh scripts/link-dotfiles.sh; else echo 'WARN shellcheck not installed'; fi"
+run = "bash -n bootstrap.sh scripts/*.sh tests/*.sh && if command -v shellcheck >/dev/null 2>&1; then shellcheck bootstrap.sh scripts/*.sh tests/*.sh; else echo 'WARN shellcheck not installed'; fi && if command -v shfmt >/dev/null 2>&1; then shfmt -i 2 -ci -d bootstrap.sh scripts/*.sh tests/*.sh; else echo 'WARN shfmt not installed'; fi"
 
 [tasks.fmt]
 description = "Format shell scripts"
-run = "if command -v shfmt >/dev/null 2>&1; then shfmt -w bootstrap.sh scripts/*.sh; else echo 'WARN shfmt not installed'; fi"
+run = "if command -v shfmt >/dev/null 2>&1; then shfmt -i 2 -ci -w bootstrap.sh scripts/*.sh tests/*.sh; else echo 'WARN shfmt not installed'; fi"

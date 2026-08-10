@@ -138,6 +138,33 @@ Test changes in proportion to their risk before committing or pushing. At minimu
 Do not describe a check as passing unless it was actually executed. Report skipped
 checks and the reason.
 
+## Continuous Integration
+
+The blocking installation workflow is `.github/workflows/test.yaml` and its stable
+aggregate status check is `CI Required`.
+
+- Every user-facing feature must have an automated assertion proving that the
+  feature was installed or configured successfully.
+- Installation changes must be exercised through `bootstrap.sh`, a second run via
+  `just install`, and `just dry-run`.
+- Keep the Linux matrix representative of supported systems: maintained Debian
+  releases, maintained Ubuntu LTS releases, and a supported CentOS Stream release.
+- Matrix jobs must perform fresh-machine tests in clean official container images;
+  do not rely on tools preinstalled on the GitHub-hosted runner.
+- Do not use `continue-on-error` for required coverage or allow one matrix failure
+  to be hidden by another result.
+- Keep the `CI Required` job unconditional with `if: always()` so dependency
+  failures produce a failing required check instead of a skipped one.
+- Do not add workflow path filters to the blocking workflow because a skipped
+  required workflow can leave pull requests permanently pending.
+- When supported distributions, installers, or user-facing features change, update
+  the matrix and assertions in the same commit.
+- After pushing workflow changes, inspect the GitHub Actions run and fix all
+  failures before reporting completion.
+- Repository rules must require `CI Required` before merging to `main`. If the
+  current credentials cannot inspect or update rules, report that limitation and
+  give the repository administrator the exact check name to require.
+
 ## Git Conventions
 
 Use Conventional Commits:

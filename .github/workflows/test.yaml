@@ -1,0 +1,86 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate shell files
+        run: |
+          bash -n bootstrap.sh scripts/*.sh tests/*.sh
+          shellcheck bootstrap.sh scripts/*.sh tests/*.sh
+          shfmt --indent 2 --case-indent --diff bootstrap.sh scripts/*.sh tests/*.sh
+          git diff --check
+
+  install:
+    name: Install (${{ matrix.system }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: Debian 12
+            image: debian:12-slim
+          - system: Debian 13
+            image: debian:13-slim
+          - system: Ubuntu 22.04
+            image: ubuntu:22.04
+          - system: Ubuntu 24.04
+            image: ubuntu:24.04
+          - system: CentOS Stream 9
+            image: quay.io/centos/centos:stream9
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run fresh-install test
+        env:
+          TEST_IMAGE: ${{ matrix.image }}
+        run: |
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/workspace:ro" \
+            "$TEST_IMAGE" \
+            bash /workspace/tests/install.sh
+
+  required:
+    name: CI Required
+    if: always()
+    needs:
+      - lint
+      - install
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require every test job to pass
+        env:
+          INSTALL_RESULT: ${{ needs.install.result }}
+          LINT_RESULT: ${{ needs.lint.result }}
+        run: |
+          test "$LINT_RESULT" = success
+          test "$INSTALL_RESULT" = success

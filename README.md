@@ -53,6 +53,16 @@ The installer is designed to be rerunnable.
 - Desktop notifications are sent when `notify-send` or `terminal-notifier` is
   available.
 
+## Continuous Integration
+
+The blocking test workflow validates shell syntax and style, then runs a complete
+fresh install in clean Debian 12, Debian 13, Ubuntu 22.04, Ubuntu 24.04, and CentOS
+Stream 9 containers. Every matrix entry verifies installed features, reruns the
+installer through `just install`, and checks `just dry-run`.
+
+Configure the repository rule for `main` to require the stable `CI Required`
+status check. A failure in lint or any operating-system install then blocks merges.
+
 Preview changes without writing files:
 
 ```bash
