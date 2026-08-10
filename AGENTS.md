@@ -159,6 +159,10 @@ aggregate status check is `CI Required`.
   required workflow can leave pull requests permanently pending.
 - When supported distributions, installers, or user-facing features change, update
   the matrix and assertions in the same commit.
+- Keep each matrix image reference as the single source of truth for its displayed
+  job name; do not duplicate OS versions in labels that Renovate cannot update.
+- Curate major Debian and Ubuntu matrix changes manually so an update cannot
+  replace an older supported release or collapse two entries onto one version.
 - After pushing workflow changes, inspect the GitHub Actions run and fix all
   failures before reporting completion.
 - Repository rules must require `CI Required` before merging to `main`. If the

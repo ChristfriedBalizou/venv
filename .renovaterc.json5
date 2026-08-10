@@ -27,6 +27,13 @@
   ],
   packageRules: [
     {
+      description: "Keep supported OS matrix releases explicitly curated",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["debian", "ubuntu"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
+    },
+    {
       description: "Automerge non-major dependency updates",
       matchUpdateTypes: [
         "minor",

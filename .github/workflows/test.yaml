@@ -41,23 +41,20 @@ jobs:
           git diff --check
 
   install:
-    name: Install (${{ matrix.system }})
+    # The image reference is the single source of truth for the displayed OS
+    # version, so dependency updates cannot leave a stale matrix label behind.
+    name: Install (${{ matrix.image }})
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - system: Debian 12
-            image: debian:12-slim
-          - system: Debian 13
-            image: debian:13-slim
-          - system: Ubuntu 22.04
-            image: ubuntu:26.04
-          - system: Ubuntu 24.04
-            image: ubuntu:26.04
-          - system: CentOS Stream 9
-            image: quay.io/centos/centos:stream9
+        image:
+          - debian:12-slim
+          - debian:13-slim
+          - ubuntu:22.04
+          - ubuntu:24.04
+          - quay.io/centos/centos:stream9
 
     steps:
       - name: Checkout
