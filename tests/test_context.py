@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 
-from dotfiles_installer.commands import CommandRunner
 from dotfiles_installer.context import InstallContext
 
 
@@ -18,7 +17,6 @@ def context_for(tmp_path: Path, dry_run: bool = False) -> InstallContext:
         home,
         home / ".local/state/dotfiles",
         dry_run,
-        CommandRunner(dry_run),
     )
 
 

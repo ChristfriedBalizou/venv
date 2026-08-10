@@ -10,8 +10,6 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
-from dotfiles_installer.commands import CommandRunner
-
 logger = logging.getLogger(__name__)
 
 
@@ -23,7 +21,6 @@ class InstallContext:
     home: Path
     state_dir: Path
     dry_run: bool
-    runner: CommandRunner
 
     @classmethod
     def from_environment(cls) -> "InstallContext":
@@ -46,7 +43,6 @@ class InstallContext:
             home,
             state_dir,
             dry_run,
-            CommandRunner(dry_run),
         )
 
     @property

@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-from lincl import CommandCallable, CommandError, CommandNotFoundError
+from lincl import CommandError, CommandNotFoundError, ExecutionOptions
 
 from dotfiles_installer.context import InstallContext
 
@@ -217,7 +217,10 @@ def retry(operation: Callable[[], None], description: str) -> None:
                 ) from error
             delay = 2**attempt
             logger.warning(
-                "%s failed; retrying in %s seconds", description, delay
+                "%s failed: %s; retrying in %s seconds",
+                description,
+                error,
+                delay,
             )
             time.sleep(delay)
 
@@ -269,6 +272,9 @@ def detect_os() -> str:
 
 def install_system_packages(context: InstallContext) -> None:
     """Install optional packages when non-interactive sudo is available."""
+    if context.dry_run:
+        logger.info("dry-run: install optional system packages")
+        return
     try:
         from lincl import sudo
     except CommandNotFoundError:
@@ -276,7 +282,7 @@ def install_system_packages(context: InstallContext) -> None:
         return
 
     try:
-        context.runner.run(sudo, "-n", "true")
+        sudo("true", n=True)
     except CommandError:
         logger.warning(
             "passwordless sudo unavailable; skipping system packages"
@@ -286,18 +292,14 @@ def install_system_packages(context: InstallContext) -> None:
     os_id = detect_os()
     if os_id in {"debian", "ubuntu", "raspbian", "raspberrypi"}:
         retry(
-            lambda: context.runner.run(sudo, "apt-get", "update"),
+            lambda: sudo.apt_get.update(),
             "apt update",
         )
         retry(
-            lambda: context.runner.run(
-                sudo, "apt-get", "install", "--yes", *APT_PACKAGES
-            ),
+            lambda: sudo.apt_get.install(*APT_PACKAGES, yes=True),
             "apt package installation",
         )
         install_first_editor(
-            context,
-            sudo,
             "apt-get",
             ("vim", "vim-nox", "neovim"),
         )
@@ -307,14 +309,13 @@ def install_system_packages(context: InstallContext) -> None:
             logger.warning("dnf and yum unavailable; skipping system packages")
             return
         retry(
-            lambda: context.runner.run(
-                sudo, manager, "install", "-y", *RPM_PACKAGES
+            lambda: sudo.subcommand(manager).install(
+                *RPM_PACKAGES,
+                y=True,
             ),
             f"{manager} package installation",
         )
         install_first_editor(
-            context,
-            sudo,
             manager,
             ("vim-enhanced", "vim", "neovim"),
         )
@@ -338,18 +339,19 @@ def rpm_package_manager() -> str | None:
 
 
 def install_first_editor(
-    context: InstallContext,
-    sudo_command: CommandCallable[str],
     manager: str,
     packages: tuple[str, ...],
 ) -> None:
     """Install the first available editor package from an ordered list."""
+    from lincl import sudo
+
+    install = sudo.subcommand(manager).install
     for package in packages:
-        arguments = (manager, "install", "--yes", package)
-        if manager != "apt-get":
-            arguments = (manager, "install", "-y", package)
         try:
-            context.runner.run(sudo_command, *arguments)
+            if manager == "apt-get":
+                install(package, yes=True)
+            else:
+                install(package, y=True)
             return
         except CommandError:
             logger.warning("editor package unavailable: %s", package)
@@ -373,13 +375,16 @@ def install_mise(context: InstallContext) -> None:
             "mise download",
         )
         target.parent.mkdir(parents=True, exist_ok=True)
-        context.runner.run(
-            sh,
+        sh.run(
             installer,
-            environment={
-                "MISE_VERSION": f"v{MISE_VERSION}",
-                "MISE_INSTALL_PATH": str(target),
-            },
+            execution=ExecutionOptions(
+                timeout=300,
+                env={
+                    **os.environ,
+                    "MISE_VERSION": f"v{MISE_VERSION}",
+                    "MISE_INSTALL_PATH": str(target),
+                },
+            ),
         )
     if not target.is_file():
         raise RuntimeError("mise installer completed without creating mise")
@@ -387,7 +392,7 @@ def install_mise(context: InstallContext) -> None:
 
 def install_tools(context: InstallContext) -> None:
     mise = context.home / ".local/bin/mise"
-    if context.dry_run and not mise.exists():
+    if context.dry_run:
         logger.info("dry-run: mise trust and install")
         return
     if not mise.exists():
@@ -395,11 +400,11 @@ def install_tools(context: InstallContext) -> None:
     from lincl import mise as mise_command
 
     retry(
-        lambda: context.runner.run(mise_command.trust, context.repo_root),
+        lambda: mise_command.trust(context.repo_root),
         "mise trust",
     )
     retry(
-        lambda: context.runner.run(mise_command.install),
+        lambda: mise_command.install(),
         "mise install",
     )
 
@@ -411,42 +416,37 @@ def configure_git(context: InstallContext) -> None:
         logger.warning("git unavailable; skipping Git configuration")
         return
 
-    context.runner.run(
-        git.config,
-        "core.editor",
-        "vim",
-        options={"global": True},
-    )
+    if context.dry_run:
+        logger.info("dry-run: configure Git editor")
+        return
+    git.config("core.editor", "vim", **{"global": True})
 
 
 def install_bash(context: InstallContext) -> None:
     bashrc = context.home / ".bashrc.omb"
     oh_my_bash = context.home / ".oh-my-bash"
-    git_command: CommandCallable[str] | None = None
     if not bashrc.exists():
         if context.dry_run:
             logger.info("dry-run: install Oh My Bash")
         else:
             try:
-                from lincl import git as git_command
+                from lincl import git
             except CommandNotFoundError:
                 logger.warning("git unavailable; skipping Oh My Bash")
-
-        if git_command is not None:
-            if oh_my_bash.exists():
-                context.backup(oh_my_bash)
-            context.runner.run(
-                git_command.clone,
-                "https://github.com/ohmybash/oh-my-bash.git",
-                oh_my_bash,
-                options={"depth": 1},
-            )
-            template = oh_my_bash / "templates/bashrc.osh-template"
-            content = template.read_text(encoding="utf-8")
-            content = content.replace(
-                'OSH_THEME="font"', "OSH_THEME='agnoster'"
-            )
-            bashrc.write_text(content, encoding="utf-8")
+            else:
+                if oh_my_bash.exists():
+                    context.backup(oh_my_bash)
+                git.clone(
+                    "https://github.com/ohmybash/oh-my-bash.git",
+                    oh_my_bash,
+                    depth=1,
+                )
+                template = oh_my_bash / "templates/bashrc.osh-template"
+                content = template.read_text(encoding="utf-8")
+                content = content.replace(
+                    'OSH_THEME="font"', "OSH_THEME='agnoster'"
+                )
+                bashrc.write_text(content, encoding="utf-8")
     activation = (
         'if [ -x "$HOME/.local/bin/mise" ]; then '
         'eval "$("$HOME/.local/bin/mise" activate bash)"; fi'
@@ -489,16 +489,14 @@ def install_fzf(context: InstallContext) -> None:
         if context.dry_run:
             logger.info("dry-run: clone fzf to %s", destination)
             return
-        context.runner.run(
-            git.clone,
+        git.clone(
             "https://github.com/junegunn/fzf.git",
             destination,
-            options={"depth": 1},
+            depth=1,
         )
     installer = destination / "install"
     if installer.exists():
-        context.runner.run(
-            env,
+        env(
             installer,
             "--key-bindings",
             "--completion",
@@ -539,7 +537,6 @@ def install_blesh(context: InstallContext) -> None:
 
 def checkout_source(
     context: InstallContext,
-    git_command: CommandCallable[str] | None,
     source: GitSource,
     destination: Path,
 ) -> None:
@@ -547,72 +544,63 @@ def checkout_source(
     if context.dry_run:
         logger.info("dry-run: checkout %s at %s", source.name, source.commit)
         return
-    if git_command is None:
-        raise RuntimeError("git is required for a non-preview checkout")
+    from lincl import git
+
+    execution = ExecutionOptions(timeout=300, cwd=destination)
 
     if (destination / ".git").exists():
         try:
-            context.runner.run(
-                git_command.fetch,
+            git.fetch.run(
                 "origin",
                 source.commit,
                 options={"depth": 1},
-                cwd=destination,
+                execution=execution,
             )
         except CommandError:
-            context.runner.run(
-                git_command.fetch,
+            git.fetch.run(
                 "origin",
                 source.reference,
-                cwd=destination,
+                execution=execution,
             )
     else:
-        context.runner.run(
-            git_command.clone,
+        git.clone(
             source.repository,
             destination,
-            options={"no_checkout": True},
+            no_checkout=True,
         )
-        context.runner.run(
-            git_command.fetch,
+        git.fetch.run(
             "origin",
             source.commit,
             options={"depth": 1},
-            cwd=destination,
+            execution=execution,
         )
-    context.runner.run(
-        git_command.checkout,
+    git.checkout.run(
         source.commit,
         options={"detach": True},
-        cwd=destination,
+        execution=execution,
     )
-    context.runner.run(
-        git_command.submodule.update,
+    git.submodule.update.run(
         options={"init": True, "recursive": True},
-        cwd=destination,
+        execution=execution,
     )
 
 
 def install_vim(context: InstallContext) -> None:
-    git_command: CommandCallable[str] | None = None
-    if not context.dry_run:
-        try:
-            from lincl import git as git_command
-        except CommandNotFoundError as error:
-            raise RuntimeError(
-                "git is required to install the Vim runtime"
-            ) from error
     runtime = Path(
         os.environ.get("VIM_RUNTIME_DIR", context.home / "opt/vimrc.runtime")
     )
-    checkout_source(context, git_command, VIM_RUNTIME, runtime)
+    try:
+        checkout_source(context, VIM_RUNTIME, runtime)
+    except CommandNotFoundError as error:
+        raise RuntimeError(
+            "git is required to install the Vim runtime"
+        ) from error
     plugins = runtime / "my_plugins"
     context.create_directory(plugins)
     for source in VIM_PLUGINS:
         try:
             checkout_source(
                 context,
-                git_command,
                 source,
                 plugins / source.name,
             )
