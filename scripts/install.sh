@@ -32,6 +32,7 @@ main() {
   "$DOTFILES_REPO_ROOT/scripts/install-bash.sh"
   "$DOTFILES_REPO_ROOT/scripts/link-dotfiles.sh"
   "$DOTFILES_REPO_ROOT/scripts/install-fzf.sh"
+  "$DOTFILES_REPO_ROOT/scripts/install-blesh.sh"
   "$DOTFILES_REPO_ROOT/scripts/install-vim.sh" || warn "vim setup failed; continuing"
 
   success "current-user setup complete"

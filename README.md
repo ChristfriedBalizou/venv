@@ -36,6 +36,7 @@ mise run install
 - Installs `mise` for the current user when missing.
 - Installs development tools from `mise.toml`.
 - Installs Oh My Bash.
+- Installs `ble.sh` for history suggestions, syntax highlighting, and completion menus.
 - Links bash, tmux, and Neovim dotfiles into `$HOME`.
 - Installs `fzf` with a user-space fallback.
 - Installs the Vim runtime under `~/opt/vimrc.runtime`.

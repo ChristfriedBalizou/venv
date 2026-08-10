@@ -8,6 +8,11 @@ case $- in
       *) return;;
 esac
 
+# Load ble.sh without attaching so the prompt and completions can initialize first.
+if [ -f "$HOME/.local/share/blesh/ble.sh" ]; then
+    source -- "$HOME/.local/share/blesh/ble.sh" --attach=none
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth:ignoredups
@@ -80,8 +85,9 @@ PATH=$FZF_BASE/bin:$PATH
 
 if command -v fzf &> /dev/null
 then
-    if [ -f $FZF_BASE/shell/key-bindings.bash ]; then
-        . $FZF_BASE/shell/key-bindings.bash
+    # ble.sh supplies compatible fzf bindings from ~/.blerc when it is loaded.
+    if [ -z "${BLE_VERSION:-}" ] && [ -f "$FZF_BASE/shell/key-bindings.bash" ]; then
+        . "$FZF_BASE/shell/key-bindings.bash"
     fi
     export FZF_DEFAULT_OPTS='--height 40% --multi -i --layout=reverse --border'
 fi
@@ -117,7 +123,6 @@ DISABLE_UPDATE_PROMPT=true
 if [ -f $HOME/.bashrc.omb ]; then
     . $HOME/.bashrc.omb
 fi
-eval "$(mise activate bash)"
 
 # Fuzzy-jump under $HOME/src.
 # Examples: src, src g, src g h b, src v teleport
@@ -183,3 +188,8 @@ __src_complete() {
     mapfile -t COMPREPLY < <(compgen -W "${candidates[*]}" -- "$cur")
 }
 complete -F __src_complete src
+
+# Attach only after Oh My Bash, the prompt, and custom completions are ready.
+if [ -n "${BLE_VERSION:-}" ]; then
+    ble-attach
+fi

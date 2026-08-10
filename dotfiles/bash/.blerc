@@ -1,0 +1,16 @@
+# History-backed suggestions and an automatic menu after a short idle delay.
+function dotfiles/complete-load-hook {
+    bleopt complete_auto_complete=1
+    bleopt complete_auto_history=1
+    bleopt complete_auto_delay=100
+    bleopt complete_auto_menu=250
+    bleopt complete_menu_style=desc
+    bleopt complete_menu_maxlines=10
+}
+blehook/eval-after-load complete dotfiles/complete-load-hook
+
+# Use ble.sh's adapters instead of fzf's Readline bindings.
+if command -v fzf &>/dev/null; then
+    ble-import -d integration/fzf-completion
+    ble-import -d integration/fzf-key-bindings
+fi
