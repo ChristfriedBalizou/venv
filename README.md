@@ -83,7 +83,7 @@ just clean-state  # remove dotfiles installer logs and backups
 
 Python dependencies are declared in `requirements.in` and
 `requirements-dev.in`, then hash-locked with `pip-tools`. The installer uses
-`lincl` 3.0.0 is pinned to its immutable upstream commit. Install a development
+`lincl` 4.0.0, pinned to its immutable upstream commit. Install a development
 environment with:
 
 ```bash
