@@ -8,9 +8,14 @@ import stat
 from pathlib import Path
 
 import pytest
-from lincl import CommandCallable
+from lincl import (
+    CommandCallable,
+    CommandExecutionError,
+    CommandResult,
+    CommandTimeoutError,
+)
 
-from dotfiles_installer.commands import CommandError, CommandRunner
+from dotfiles_installer.commands import CommandRunner, RedactedCommandError
 
 
 def executable_fixture(
@@ -37,7 +42,10 @@ def test_arguments_are_not_evaluated_by_a_shell(
 
     result = CommandRunner().run(command, (argument,))
 
+    assert isinstance(result, CommandResult)
+    assert result.args == (command.executable, argument)
     assert result.stdout == argument
+    assert result.value == argument
     assert not marker.exists()
 
 
@@ -49,7 +57,10 @@ def test_failure_redacts_selected_arguments(
     command = executable_fixture(tmp_path, "exit 2", monkeypatch)
     secret = "token-that-must-not-leak"
 
-    with caplog.at_level(logging.INFO), pytest.raises(CommandError) as raised:
+    with (
+        caplog.at_level(logging.INFO),
+        pytest.raises(RedactedCommandError) as raised,
+    ):
         CommandRunner().run(
             command,
             ("--token", secret),
@@ -62,15 +73,32 @@ def test_failure_redacts_selected_arguments(
     assert raised.value.__cause__ is not None
 
 
+def test_failure_preserves_lincl_error_metadata(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    command = executable_fixture(
+        tmp_path, "printf failure >&2; exit 7", monkeypatch
+    )
+
+    with pytest.raises(CommandExecutionError) as raised:
+        CommandRunner().run(command)
+
+    assert raised.value.returncode == 7
+    assert raised.value.stderr == "failure"
+    assert raised.value.args_vector == (command.executable,)
+
+
 def test_timeout_has_stable_error_shape(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     command = executable_fixture(tmp_path, "sleep 5", monkeypatch)
 
-    with pytest.raises(CommandError, match="command failed") as raised:
+    with pytest.raises(CommandTimeoutError) as raised:
         CommandRunner().run(command, timeout=0.01)
 
-    assert raised.value.__cause__ is not None
+    assert raised.value.timeout == 0.01
+    assert raised.value.args_vector[0] == command.executable
 
 
 def test_environment_is_explicit(

@@ -5,26 +5,21 @@ from __future__ import annotations
 import logging
 import os
 import shlex
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
 
-from lincl import CommandCallable, ExecutionOptions
-from lincl.exceptions import CommandError as LinclCommandError
+from lincl import (
+    CommandCallable,
+    CommandError,
+    CommandResult,
+    ExecutionOptions,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class CommandError(RuntimeError):
-    """Report a failed external command without exposing secret values."""
-
-
-@dataclass(frozen=True)
-class CommandResult:
-    """Captured output from a successfully completed command."""
-
-    stdout: str
-    stderr: str
+class RedactedCommandError(CommandError):
+    """Report a command failure without exposing selected arguments."""
 
 
 class CommandRunner:
@@ -41,7 +36,7 @@ class CommandRunner:
         environment: Mapping[str, str] | None = None,
         redacted_arguments: frozenset[int] = frozenset(),
         timeout: float = 300,
-    ) -> CommandResult:
+    ) -> CommandResult[str]:
         """Run one command with literal arguments and captured output."""
         executable = command.executable
         command_arguments = [str(argument) for argument in arguments]
@@ -54,10 +49,16 @@ class CommandRunner:
             shlex.join([executable, *display_arguments]),
         )
         if self.dry_run:
-            return CommandResult("", "")
+            return CommandResult(
+                args=(executable, *command_arguments),
+                returncode=0,
+                stdout="",
+                stderr="",
+                value="",
+            )
 
         try:
-            result = command.run(
+            return command.run(
                 *command_arguments,
                 execution=ExecutionOptions(
                     timeout=timeout,
@@ -68,7 +69,10 @@ class CommandRunner:
                     ),
                 ),
             )
-        except LinclCommandError as error:
+        except CommandError as error:
+            if not redacted_arguments:
+                raise
             safe_command = shlex.join([executable, *display_arguments])
-            raise CommandError(f"command failed: {safe_command}") from error
-        return CommandResult(result.stdout, result.stderr)
+            raise RedactedCommandError(
+                f"command failed: {safe_command}"
+            ) from error

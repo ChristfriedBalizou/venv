@@ -14,9 +14,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-from lincl import CommandCallable, CommandNotFoundError
+from lincl import CommandCallable, CommandError, CommandNotFoundError
 
-from dotfiles_installer.commands import CommandError
 from dotfiles_installer.context import InstallContext
 
 logger = logging.getLogger(__name__)

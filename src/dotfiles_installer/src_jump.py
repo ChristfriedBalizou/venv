@@ -6,8 +6,7 @@ import logging
 import sys
 from pathlib import Path
 
-from lincl import CommandNotFoundError, ExecutionOptions
-from lincl.exceptions import CommandError
+from lincl import CommandError, CommandNotFoundError, ExecutionOptions
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +58,12 @@ def prefix_match(candidates: list[Path], query: str) -> Path | None:
     return None
 
 
+def first_path(output: str) -> Path | None:
+    """Return the first path emitted by a selector."""
+    lines = output.splitlines()
+    return Path(lines[0]) if lines else None
+
+
 def fzf_match(candidates: list[Path], query: str) -> Path | None:
     try:
         from lincl import fzf
@@ -67,18 +72,18 @@ def fzf_match(candidates: list[Path], query: str) -> Path | None:
 
     candidate_text = "\n".join(str(candidate) for candidate in candidates)
     try:
-        result = fzf.run(
-            "--filter",
-            query,
-            "--select-1",
-            "--exit-0",
+        result = fzf.configure(parser=first_path).run(
+            options={
+                "filter": query,
+                "select_1": True,
+                "exit_0": True,
+            },
             execution=ExecutionOptions(input=candidate_text, timeout=30),
         )
     except CommandError:
         return None
 
-    first_match = result.stdout.splitlines()[0] if result.stdout else ""
-    return Path(first_match) if first_match else None
+    return result.value
 
 
 def fuzzy_match(candidates: list[Path], query: str) -> Path | None:
