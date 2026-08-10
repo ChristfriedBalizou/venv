@@ -2,7 +2,7 @@
 
 ## Role and Standard
 
-Act as a senior Linux, Bash, and shell-engineering specialist.
+Act as a senior Linux, Python, Bash, and shell-engineering specialist.
 
 - Do not guess about commands, flags, package names, compatibility, or behavior.
 - Inspect the repository and the target environment before making changes.
@@ -17,7 +17,7 @@ Act as a senior Linux, Bash, and shell-engineering specialist.
 
 - Prefer the smallest clear implementation that completely solves the task.
 - Use short, focused shell functions for repeated or named operations.
-- Reuse helpers from `scripts/lib.sh` before introducing new helpers.
+- Reuse helpers from `src/dotfiles_installer` before introducing new helpers.
 - Keep scripts readable to an experienced Linux administrator without requiring a
   framework or configuration-management system.
 - Avoid clever one-liners when a small function makes behavior or failure handling
@@ -38,8 +38,8 @@ Installers must:
 
 - Be safe to run repeatedly and converge on the desired state.
 - Support `DOTFILES_DRY_RUN=1` without making target-system changes.
-- Use the logging, retry, backup, notification, and status helpers in
-  `scripts/lib.sh` where applicable.
+- Use the logging, retry, backup, command-runner, and status helpers in
+  `src/dotfiles_installer` where applicable.
 - Quote variable expansions and safely handle paths containing whitespace.
 - Detect existing valid installations and avoid unnecessary downloads or work.
 - Fail clearly for required components and warn clearly for explicitly optional
@@ -117,6 +117,77 @@ Security review is a high-priority part of every change.
   backup/link helpers.
 - Keep ShellCheck suppressions narrow and explain why they are necessary.
 
+## Python design and style
+
+- Support only Python and operating-system versions declared by package metadata
+  and CI. When changing support, update metadata, lockfiles, documentation, and the
+  test matrix together.
+- Add type hints to all public functions. Prefer dataclasses or other explicit typed
+  models over passing loosely structured dictionaries.
+- Give every function one responsibility at one abstraction level. Split a function
+  whose accurate name requires “and”.
+- Use explicit names. Avoid `a`, `b`, `c`, `tmp`, `data`, `obj`, `res`, and
+  single-letter names except conventional indices in short comprehensions.
+- Prefer code that explains itself. First rename, extract, or simplify instead of
+  adding a comment. Comments are reserved for external constraints, non-obvious
+  business rules, or links to upstream specifications and bugs.
+- Docstrings document behavioral contracts and rationale, not a restatement of the
+  implementation.
+- Never use `print()` in library code. Use
+  `logger = logging.getLogger(__name__)`, and keep normal library operation quiet
+  unless the caller configures logging.
+- Preserve exception context with explicit chaining. Do not catch broad exceptions
+  unless adding meaningful context and re-raising safely.
+
+## Tests and verification
+
+- Every behavior change requires tests at the lowest useful level and an end-to-end
+  command execution test where applicable. A small function should normally have
+  direct unit coverage; prioritize behavior and failure paths over mechanical
+  one-test-per-function counting.
+- Tests must be deterministic, isolated, non-interactive, and safe without root. Use
+  temporary directories and controlled fixture executables instead of mutating host
+  files or depending on distro-specific command output.
+- Run the narrow tests while iterating, then the complete test suite and all
+  pre-commit hooks before completion.
+- Security-sensitive execution changes require injection, redaction, timeout,
+  resource-handling, and error-shape regression tests.
+
+## Pre-commit is the style authority
+
+Maintain `.pre-commit-config.yaml` with hooks in this order:
+
+1. `absolufy-imports` for absolute imports.
+2. `black` with line length 79.
+3. `pre-commit-hooks`: `trailing-whitespace`, `end-of-file-fixer`, and
+   `debug-statements`.
+4. `isort` with `--profile black` and line length 79.
+5. `yesqa` to remove obsolete `# noqa` directives.
+6. `flake8`, configured in `setup.cfg` with `max-line-length = 80`,
+   `max-complexity = 20`, the project's documented shared ignore list, and
+   `tests/*: E501` per-file ignores.
+
+Set `fail_fast: true`. Install locally with
+`pre-commit install --install-hooks`. CI must run the same hooks, and no change is
+complete while they or tests are red.
+
+## Dependencies and packaging
+
+- Put direct runtime dependencies in `requirements.in` and development/test
+  dependencies in `requirements-dev.in`.
+- Compile lockfiles with `pip-tools` using
+  `pip-compile --allow-unsafe --generate-hashes --no-emit-index-url` and commit them.
+  Install development environments with
+  `pip-sync requirements.txt requirements-dev.txt`.
+- Never install a project dependency ad hoc. Add it to the appropriate `.in` file
+  and recompile. Use `make upgrade-reqs` for intentional upgrades once that target
+  exists.
+- Keep the package editable-installable with `python -m pip install -e .`. `setup.py`
+  may remain while compatibility requires it, but new packaging behavior should
+  follow current PyPA standards verified from official docs.
+- Maintain a single canonical `__version__` source. Package metadata, artifacts,
+  tags, and releases must agree with it.
+
 ## Required Validation
 
 Test changes in proportion to their risk before committing or pushing. At minimum:
@@ -182,6 +253,12 @@ Use Conventional Commits:
 Additional Git rules:
 
 - Keep commits focused and exclude unrelated user changes.
+- Commit completed changes automatically using the conventions above. Before every
+  commit, run the full pre-commit suite, inspect the staged diff, and confirm no
+  secrets, generated junk, or unrelated changes are included. Do not commit while
+  pre-commit or applicable tests are failing. Push only when the user explicitly
+  requests it. Never force-push or rewrite shared history without explicit
+  instruction.
 - Run the required validation before committing.
 - The agent is authorized to commit and push changes in this repository after
   validation when doing so is part of completing an implementation task.

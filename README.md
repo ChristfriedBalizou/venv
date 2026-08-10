@@ -55,7 +55,7 @@ The installer is designed to be rerunnable.
 
 ## Continuous Integration
 
-The blocking test workflow validates shell syntax and style, then runs a complete
+The blocking test workflow validates Python and bootstrap style, then runs a complete
 fresh install in clean Debian 12, Debian 13, Ubuntu 22.04, Ubuntu 24.04, and CentOS
 Stream 9 containers. Every matrix entry verifies installed features, reruns the
 installer through `just install`, and checks `just dry-run`.
@@ -74,12 +74,25 @@ just dry-run
 ```bash
 just install      # full setup
 just dry-run      # preview actions
-just check        # shell syntax and shellcheck when available
-just fmt          # format shell scripts when shfmt is available
+just check        # run pytest and every pre-commit hook
+just fmt          # format Python sources and tests
 just clean-state  # remove dotfiles installer logs and backups
 ```
 
 ## Dependency Updates
+
+Python dependencies are declared in `requirements.in` and
+`requirements-dev.in`, then hash-locked with `pip-tools`. The installer uses
+`lincl` 1.1.1 pinned to its immutable upstream commit because that release is not
+yet available from PyPI. Install a development environment with:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install pip-tools
+.venv/bin/pip-sync requirements.txt requirements-dev.txt
+.venv/bin/pip install --no-deps -e .
+.venv/bin/pre-commit install --install-hooks
+```
 
 Tool versions are pinned in `mise.toml` and resolved in `mise.lock`.
 Mise updates are handled manually because Renovate's mise manager is disabled.
@@ -101,5 +114,7 @@ justfile           # local command runner
 mise.toml          # tool versions and mise tasks
 mise.lock          # resolved mise tool artifacts and checksums
 dotfiles/          # files linked into $HOME
-scripts/           # installer steps and shared safety helpers
+src/dotfiles_installer/ # typed Python installer and lincl command adapter
+requirements*.in  # direct runtime and development dependency inputs
+requirements*.txt # hash-pinned dependency lockfiles
 ```

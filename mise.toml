@@ -15,16 +15,16 @@ _.path = [
 
 [tasks.install]
 description = "Install the full current-user development environment"
-run = "scripts/install.sh"
+run = "PYTHONPATH=src .venv/bin/python -m dotfiles_installer.cli"
 
 [tasks.dry-run]
 description = "Show setup actions without changing files"
-run = "DOTFILES_DRY_RUN=1 scripts/install.sh"
+run = "DOTFILES_DRY_RUN=1 PYTHONPATH=src .venv/bin/python -m dotfiles_installer.cli"
 
 [tasks.check]
-description = "Run shell syntax and style checks"
-run = "bash -n bootstrap.sh scripts/*.sh tests/*.sh && if command -v shellcheck >/dev/null 2>&1; then shellcheck bootstrap.sh scripts/*.sh tests/*.sh; else echo 'WARN shellcheck not installed'; fi && if command -v shfmt >/dev/null 2>&1; then shfmt -i 2 -ci -d bootstrap.sh scripts/*.sh tests/*.sh; else echo 'WARN shfmt not installed'; fi"
+description = "Run tests and pre-commit hooks"
+run = ".venv/bin/python -m pytest && .venv/bin/pre-commit run --all-files"
 
 [tasks.fmt]
-description = "Format shell scripts"
-run = "if command -v shfmt >/dev/null 2>&1; then shfmt -i 2 -ci -w bootstrap.sh scripts/*.sh tests/*.sh; else echo 'WARN shfmt not installed'; fi"
+description = "Format Python code"
+run = ".venv/bin/black --line-length 79 --target-version py39 src tests && .venv/bin/isort --profile black --line-length 79 src tests"

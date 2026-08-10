@@ -7,21 +7,25 @@ default:
     @just --list
 
 install:
-    @{{repo}}/scripts/install.sh
+    @PYTHONPATH={{repo}}/src {{repo}}/.venv/bin/python -m dotfiles_installer.cli
 
 bootstrap:
     @{{repo}}/bootstrap.sh
 
 dry-run:
-    @DOTFILES_DRY_RUN=1 {{repo}}/scripts/install.sh
+    @DOTFILES_DRY_RUN=1 PYTHONPATH={{repo}}/src {{repo}}/.venv/bin/python -m dotfiles_installer.cli
 
 check:
-    @bash -n {{repo}}/bootstrap.sh {{repo}}/scripts/*.sh {{repo}}/tests/*.sh
-    @if command -v shellcheck >/dev/null 2>&1; then shellcheck {{repo}}/bootstrap.sh {{repo}}/scripts/*.sh {{repo}}/tests/*.sh; else echo "WARN shellcheck not installed"; fi
-    @if command -v shfmt >/dev/null 2>&1; then shfmt -i 2 -ci -d {{repo}}/bootstrap.sh {{repo}}/scripts/*.sh {{repo}}/tests/*.sh; else echo "WARN shfmt not installed"; fi
+    @{{repo}}/.venv/bin/python -m pytest
+    @{{repo}}/.venv/bin/pre-commit run --all-files
 
 fmt:
-    @if command -v shfmt >/dev/null 2>&1; then shfmt -i 2 -ci -w {{repo}}/bootstrap.sh {{repo}}/scripts/*.sh {{repo}}/tests/*.sh; else echo "WARN shfmt not installed"; fi
+    @{{repo}}/.venv/bin/black --line-length 79 --target-version py39 src tests
+    @{{repo}}/.venv/bin/isort --profile black --line-length 79 src tests
+
+upgrade-reqs:
+    @{{repo}}/.venv/bin/pip-compile --upgrade --allow-unsafe --generate-hashes --no-emit-index-url requirements.in
+    @{{repo}}/.venv/bin/pip-compile --upgrade --allow-unsafe --generate-hashes --no-emit-index-url requirements-dev.in
 
 clean-state:
     @rm -rf "$HOME/.local/state/dotfiles"

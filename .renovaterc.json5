@@ -12,16 +12,16 @@
   customManagers: [
     {
       customType: "regex",
-      managerFilePatterns: ["/^scripts\\/install-vim\\.sh$/"],
+      managerFilePatterns: ["/^src\\/dotfiles_installer\\/installer\\.py$/"],
       matchStrings: [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+\"(?<currentValue>[^\"|\\s]+)\\|(?<currentDigest>[a-f0-9]{40})\\|https://github\\.com/[^\"\\s]+\\.git\"",
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+).*?\\s+GitSource\\(\\s*\"https://github\\.com/[^\"\\s]+\\.git\",\\s*\"(?<currentValue>[^\"\\s]+)\",\\s*\"(?<currentDigest>[a-f0-9]{40})\"",
       ],
     },
     {
       customType: "regex",
-      managerFilePatterns: ["/^scripts\\/install-vim\\.sh$/"],
+      managerFilePatterns: ["/^src\\/dotfiles_installer\\/installer\\.py$/"],
       matchStrings: [
-        "# renovate: datasource=(?<datasource>git-refs) packageName=(?<packageName>\\S+) currentValue=(?<currentValue>\\S+)\\s+(?:\\w+=)?\"[^\"|]+\\|(?<currentDigest>[a-f0-9]{40})\\|https://github\\.com/[^\"\\s]+\\.git\"",
+        "# renovate: datasource=(?<datasource>git-refs) packageName=(?<packageName>\\S+) currentValue=(?<currentValue>\\S+).*?\\s+(?:\\w+\\s*=\\s*)?GitSource\\(\\s*\"https://github\\.com/[^\"\\s]+\\.git\",\\s*\"[^\"\\s]+\",\\s*\"(?<currentDigest>[a-f0-9]{40})\"",
       ],
     },
   ],
@@ -56,7 +56,7 @@
       description: "Group tagged Vim plugin updates together",
       matchManagers: ["custom.regex"],
       matchDatasources: ["github-tags"],
-      matchFileNames: ["scripts/install-vim.sh"],
+      matchFileNames: ["src/dotfiles_installer/installer.py"],
       groupName: "vim plugin tags",
       labels: [
         "renovate/vim",
@@ -67,7 +67,7 @@
       description: "Group branch-pinned Vim plugin digest updates together",
       matchManagers: ["custom.regex"],
       matchDatasources: ["git-refs"],
-      matchFileNames: ["scripts/install-vim.sh"],
+      matchFileNames: ["src/dotfiles_installer/installer.py"],
       groupName: "vim plugin branch pins",
       labels: [
         "renovate/vim",

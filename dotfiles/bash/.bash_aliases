@@ -68,15 +68,17 @@ alias ..='cd ..'
 
 __bash_aliases_path="$(readlink -f "${BASH_SOURCE[0]}")"
 __dotfiles_repo_root="$(dirname "$(dirname "$(dirname "$__bash_aliases_path")")")"
-__src_jump_script="$__dotfiles_repo_root/scripts/src-jump.py"
-unset __bash_aliases_path __dotfiles_repo_root
+__src_jump_python="$__dotfiles_repo_root/.venv/bin/python"
+__src_jump_path="$__dotfiles_repo_root/src"
+unset __bash_aliases_path
 
 __src_match() {
     local root="$1"
     local destination
     shift
 
-    destination="$(python3 "$__src_jump_script" "$root" "$@")" || return
+    destination="$(PYTHONPATH="$__src_jump_path" "$__src_jump_python" \
+        -m dotfiles_installer.src_jump "$root" "$@")" || return
     cd "$destination"
 }
 
@@ -107,7 +109,7 @@ alias la='ll -a'           #  Show hidden files.
 #alias tree='tree -Csuh'    #  Nice alternative to 'recursive ls' ...
 
 #-------------------------------------------------------------
-# vi 
+# vi
 #-------------------------------------------------------------
 # alias vi='/usr/local/bin/vim'
 

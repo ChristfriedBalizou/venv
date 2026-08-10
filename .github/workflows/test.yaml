@@ -30,14 +30,18 @@ jobs:
 
       - name: Install lint dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes shfmt
+          python -m pip install --require-hashes \
+            --requirement requirements.txt \
+            --requirement requirements-dev.txt
+          pip-sync requirements.txt requirements-dev.txt
+          python -m pip install --no-deps -e .
+          pre-commit install --install-hooks
 
-      - name: Validate shell files
+      - name: Validate repository
         run: |
-          bash -n bootstrap.sh scripts/*.sh tests/*.sh
-          shellcheck bootstrap.sh scripts/*.sh tests/*.sh
-          shfmt --indent 2 --case-indent --diff bootstrap.sh scripts/*.sh tests/*.sh
+          python -m pytest
+          pre-commit run --all-files
+          bash -n bootstrap.sh tests/*.sh
           git diff --check
 
   install:

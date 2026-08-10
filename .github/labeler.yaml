@@ -34,7 +34,7 @@ area/scripts:
   - changed-files:
       - any-glob-to-any-file:
           - bootstrap.sh
-          - scripts/**/*
+          - src/**/*
 
 area/tmux:
   - changed-files:
@@ -46,4 +46,4 @@ area/vim:
       - any-glob-to-any-file:
           - dotfiles/nvim/**/*
           - dotfiles/vim/**/*
-          - scripts/install-vim.sh
+          - src/dotfiles_installer/installer.py

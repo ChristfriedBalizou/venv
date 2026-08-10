@@ -2,10 +2,15 @@
 
 import argparse
 import difflib
+import logging
 import shutil
-import subprocess
 import sys
 from pathlib import Path
+
+from lincl import ExecutionOptions
+from lincl.exceptions import CommandError
+
+logger = logging.getLogger(__name__)
 
 
 def clean_name(path: Path) -> str:
@@ -58,16 +63,19 @@ def prefix_match(candidates: list[Path], query: str) -> Path | None:
 def fzf_match(candidates: list[Path], query: str) -> Path | None:
     if not shutil.which("fzf"):
         return None
+    from lincl import fzf
 
     candidate_text = "\n".join(str(candidate) for candidate in candidates)
-    result = subprocess.run(
-        ["fzf", "--filter", query, "--select-1", "--exit-0"],
-        input=candidate_text,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        check=False,
-    )
+    try:
+        result = fzf.run(
+            "--filter",
+            query,
+            "--select-1",
+            "--exit-0",
+            execution=ExecutionOptions(input=candidate_text, timeout=30),
+        )
+    except CommandError:
+        return None
 
     first_match = result.stdout.splitlines()[0] if result.stdout else ""
     return Path(first_match) if first_match else None
@@ -107,11 +115,11 @@ def cd_jump(root: Path, queries: list[str]) -> int:
     root = root.expanduser().resolve()
 
     if not root.is_dir():
-        print(f"Directory does not exist: {root}", file=sys.stderr)
+        logger.error("directory does not exist: %s", root)
         return 1
 
     if not queries:
-        print(root)
+        sys.stdout.write(f"{root}\n")
         return 0
 
     destination = root
@@ -122,20 +130,23 @@ def cd_jump(root: Path, queries: list[str]) -> int:
 
         if not match:
             if index == 0:
-                print(
-                    f"No directory matching '{query}' under {destination}",
-                    file=sys.stderr,
+                logger.error(
+                    "no directory matching %r under %s", query, destination
                 )
                 return 1
             break
 
         destination = match
 
-    print(destination)
+    sys.stdout.write(f"{destination}\n")
     return 0
 
 
 def main() -> int:
+    """Parse command-line arguments and print the selected directory."""
+    logging.basicConfig(
+        level=logging.ERROR, format="%(levelname)s %(message)s"
+    )
     parser = argparse.ArgumentParser(
         description="Print the best matching directory for shell cd shortcuts."
     )
