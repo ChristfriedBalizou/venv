@@ -48,9 +48,9 @@ jobs:
           - system: Debian 13
             image: debian:13-slim
           - system: Ubuntu 22.04
-            image: ubuntu:22.04
+            image: ubuntu:26.04
           - system: Ubuntu 24.04
-            image: ubuntu:24.04
+            image: ubuntu:26.04
           - system: CentOS Stream 9
             image: quay.io/centos/centos:stream9
 
