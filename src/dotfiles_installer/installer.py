@@ -276,7 +276,7 @@ def install_system_packages(context: InstallContext) -> None:
         return
 
     try:
-        context.runner.run(sudo, ("-n", "true"))
+        context.runner.run(sudo, "-n", "true")
     except CommandError:
         logger.warning(
             "passwordless sudo unavailable; skipping system packages"
@@ -286,12 +286,12 @@ def install_system_packages(context: InstallContext) -> None:
     os_id = detect_os()
     if os_id in {"debian", "ubuntu", "raspbian", "raspberrypi"}:
         retry(
-            lambda: context.runner.run(sudo, ("apt-get", "update")),
+            lambda: context.runner.run(sudo, "apt-get", "update"),
             "apt update",
         )
         retry(
             lambda: context.runner.run(
-                sudo, ("apt-get", "install", "--yes", *APT_PACKAGES)
+                sudo, "apt-get", "install", "--yes", *APT_PACKAGES
             ),
             "apt package installation",
         )
@@ -308,7 +308,7 @@ def install_system_packages(context: InstallContext) -> None:
             return
         retry(
             lambda: context.runner.run(
-                sudo, (manager, "install", "-y", *RPM_PACKAGES)
+                sudo, manager, "install", "-y", *RPM_PACKAGES
             ),
             f"{manager} package installation",
         )
@@ -349,7 +349,7 @@ def install_first_editor(
         if manager != "apt-get":
             arguments = (manager, "install", "-y", package)
         try:
-            context.runner.run(sudo_command, arguments)
+            context.runner.run(sudo_command, *arguments)
             return
         except CommandError:
             logger.warning("editor package unavailable: %s", package)
@@ -375,7 +375,7 @@ def install_mise(context: InstallContext) -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         context.runner.run(
             sh,
-            (installer,),
+            installer,
             environment={
                 "MISE_VERSION": f"v{MISE_VERSION}",
                 "MISE_INSTALL_PATH": str(target),
@@ -395,11 +395,11 @@ def install_tools(context: InstallContext) -> None:
     from lincl import mise as mise_command
 
     retry(
-        lambda: context.runner.run(mise_command, ("trust", context.repo_root)),
+        lambda: context.runner.run(mise_command.trust, context.repo_root),
         "mise trust",
     )
     retry(
-        lambda: context.runner.run(mise_command, ("install",)),
+        lambda: context.runner.run(mise_command.install),
         "mise install",
     )
 
@@ -411,7 +411,12 @@ def configure_git(context: InstallContext) -> None:
         logger.warning("git unavailable; skipping Git configuration")
         return
 
-    context.runner.run(git, ("config", "--global", "core.editor", "vim"))
+    context.runner.run(
+        git.config,
+        "core.editor",
+        "vim",
+        options={"global": True},
+    )
 
 
 def install_bash(context: InstallContext) -> None:
@@ -431,13 +436,10 @@ def install_bash(context: InstallContext) -> None:
             if oh_my_bash.exists():
                 context.backup(oh_my_bash)
             context.runner.run(
-                git_command,
-                (
-                    "clone",
-                    "--depth=1",
-                    "https://github.com/ohmybash/oh-my-bash.git",
-                    oh_my_bash,
-                ),
+                git_command.clone,
+                "https://github.com/ohmybash/oh-my-bash.git",
+                oh_my_bash,
+                options={"depth": 1},
             )
             template = oh_my_bash / "templates/bashrc.osh-template"
             content = template.read_text(encoding="utf-8")
@@ -488,25 +490,19 @@ def install_fzf(context: InstallContext) -> None:
             logger.info("dry-run: clone fzf to %s", destination)
             return
         context.runner.run(
-            git,
-            (
-                "clone",
-                "--depth",
-                "1",
-                "https://github.com/junegunn/fzf.git",
-                destination,
-            ),
+            git.clone,
+            "https://github.com/junegunn/fzf.git",
+            destination,
+            options={"depth": 1},
         )
     installer = destination / "install"
     if installer.exists():
         context.runner.run(
             env,
-            (
-                installer,
-                "--key-bindings",
-                "--completion",
-                "--no-update-rc",
-            ),
+            installer,
+            "--key-bindings",
+            "--completion",
+            "--no-update-rc",
         )
 
 
@@ -557,46 +553,43 @@ def checkout_source(
     if (destination / ".git").exists():
         try:
             context.runner.run(
-                git_command,
-                (
-                    "-C",
-                    destination,
-                    "fetch",
-                    "--depth",
-                    "1",
-                    "origin",
-                    source.commit,
-                ),
+                git_command.fetch,
+                "origin",
+                source.commit,
+                options={"depth": 1},
+                cwd=destination,
             )
         except CommandError:
             context.runner.run(
-                git_command,
-                ("-C", destination, "fetch", "origin", source.reference),
+                git_command.fetch,
+                "origin",
+                source.reference,
+                cwd=destination,
             )
     else:
         context.runner.run(
-            git_command,
-            ("clone", "--no-checkout", source.repository, destination),
+            git_command.clone,
+            source.repository,
+            destination,
+            options={"no_checkout": True},
         )
         context.runner.run(
-            git_command,
-            (
-                "-C",
-                destination,
-                "fetch",
-                "--depth",
-                "1",
-                "origin",
-                source.commit,
-            ),
+            git_command.fetch,
+            "origin",
+            source.commit,
+            options={"depth": 1},
+            cwd=destination,
         )
     context.runner.run(
-        git_command,
-        ("-C", destination, "checkout", "--detach", source.commit),
+        git_command.checkout,
+        source.commit,
+        options={"detach": True},
+        cwd=destination,
     )
     context.runner.run(
-        git_command,
-        ("-C", destination, "submodule", "update", "--init", "--recursive"),
+        git_command.submodule.update,
+        options={"init": True, "recursive": True},
+        cwd=destination,
     )
 
 

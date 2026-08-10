@@ -40,7 +40,7 @@ def test_arguments_are_not_evaluated_by_a_shell(
     command = executable_fixture(tmp_path, 'printf "%s" "$1"', monkeypatch)
     argument = f"$(touch {marker})"
 
-    result = CommandRunner().run(command, (argument,))
+    result = CommandRunner().run(command, argument)
 
     assert isinstance(result, CommandResult)
     assert result.args == (command.executable, argument)
@@ -63,7 +63,8 @@ def test_failure_redacts_selected_arguments(
     ):
         CommandRunner().run(
             command,
-            ("--token", secret),
+            "--token",
+            secret,
             redacted_arguments=frozenset({1}),
         )
 
@@ -115,3 +116,30 @@ def test_environment_is_explicit(
     )
 
     assert result.stdout == "expected"
+
+
+def test_subcommand_options_follow_the_subcommand(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    command = executable_fixture(
+        tmp_path,
+        'printf "%s\\n" "$@"',
+        monkeypatch,
+    )
+    destination = tmp_path / "checkout"
+
+    result = CommandRunner().run(
+        command.clone,
+        "https://example.invalid/repository.git",
+        destination,
+        options={"depth": 1},
+    )
+
+    assert result.args == (
+        command.executable,
+        "clone",
+        "--depth=1",
+        "https://example.invalid/repository.git",
+        str(destination),
+    )

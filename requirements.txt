@@ -4,6 +4,6 @@
 #
 #    pip-compile --allow-unsafe --generate-hashes --no-emit-index-url requirements.in
 #
-lincl @ https://github.com/ChristfriedBalizou/lincl/archive/07cfd3d349e6d9b2ede3bd6dbe634e9796b3719d.tar.gz \
-    --hash=sha256:54b0f78f865bfc9452add16915b8ebe6b1e8e27b215b4048d3587651c5c09c97
+lincl @ https://github.com/ChristfriedBalizou/lincl/archive/317ee6d81e9b0044dd76796c955bf702ce07e412.tar.gz \
+    --hash=sha256:a417d3a2d504fddf2b1906341b56252995744495e61aa3a423610536585c6b9f
     # via -r requirements.in

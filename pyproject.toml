@@ -6,9 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "dotfiles-installer"
 description = "Current-user development environment installer"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
-    "lincl @ https://github.com/ChristfriedBalizou/lincl/archive/07cfd3d349e6d9b2ede3bd6dbe634e9796b3719d.tar.gz",
+    "lincl @ https://github.com/ChristfriedBalizou/lincl/archive/317ee6d81e9b0044dd76796c955bf702ce07e412.tar.gz",
 ]
 dynamic = ["version"]
 

@@ -13,9 +13,13 @@ from lincl import (
     CommandError,
     CommandResult,
     ExecutionOptions,
+    transcribe,
 )
 
 logger = logging.getLogger(__name__)
+
+CommandArgument = str | int | float | Path
+CommandOption = CommandArgument | Sequence[CommandArgument] | bool | None
 
 
 class RedactedCommandError(CommandError):
@@ -31,26 +35,29 @@ class CommandRunner:
     def run(
         self,
         command: CommandCallable[str],
-        arguments: Sequence[str | Path] = (),
-        *,
+        *arguments: CommandArgument,
+        options: Mapping[str, CommandOption] | None = None,
         environment: Mapping[str, str] | None = None,
+        cwd: Path | None = None,
         redacted_arguments: frozenset[int] = frozenset(),
         timeout: float = 300,
     ) -> CommandResult[str]:
         """Run one command with literal arguments and captured output."""
         executable = command.executable
-        command_arguments = [str(argument) for argument in arguments]
+        subcommands = command.__qualname__.split(".")[1:]
+        command_options = dict(options or {})
+        command_arguments = transcribe(*arguments, **command_options)
         display_arguments = [
             "<redacted>" if index in redacted_arguments else argument
             for index, argument in enumerate(command_arguments)
         ]
         logger.info(
             "run: %s",
-            shlex.join([executable, *display_arguments]),
+            shlex.join([executable, *subcommands, *display_arguments]),
         )
         if self.dry_run:
             return CommandResult(
-                args=(executable, *command_arguments),
+                args=(executable, *subcommands, *command_arguments),
                 returncode=0,
                 stdout="",
                 stderr="",
@@ -59,9 +66,11 @@ class CommandRunner:
 
         try:
             return command.run(
-                *command_arguments,
+                *arguments,
+                options=command_options,
                 execution=ExecutionOptions(
                     timeout=timeout,
+                    cwd=cwd,
                     env=(
                         {**os.environ, **environment}
                         if environment is not None
@@ -72,7 +81,9 @@ class CommandRunner:
         except CommandError as error:
             if not redacted_arguments:
                 raise
-            safe_command = shlex.join([executable, *display_arguments])
+            safe_command = shlex.join(
+                [executable, *subcommands, *display_arguments]
+            )
             raise RedactedCommandError(
                 f"command failed: {safe_command}"
             ) from error
