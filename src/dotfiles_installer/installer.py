@@ -271,7 +271,6 @@ def detect_os() -> str:
 
 
 def install_system_packages(context: InstallContext) -> None:
-    """Install optional packages when non-interactive sudo is available."""
     if context.dry_run:
         logger.info("dry-run: install optional system packages")
         return
@@ -309,10 +308,7 @@ def install_system_packages(context: InstallContext) -> None:
             logger.warning("dnf and yum unavailable; skipping system packages")
             return
         retry(
-            lambda: sudo.subcommand(manager).install(
-                *RPM_PACKAGES,
-                y=True,
-            ),
+            lambda: install_rpm_packages(manager),
             f"{manager} package installation",
         )
         install_first_editor(
@@ -342,20 +338,33 @@ def install_first_editor(
     manager: str,
     packages: tuple[str, ...],
 ) -> None:
-    """Install the first available editor package from an ordered list."""
     from lincl import sudo
 
-    install = sudo.subcommand(manager).install
     for package in packages:
         try:
             if manager == "apt-get":
-                install(package, yes=True)
+                sudo.apt_get.install(package, yes=True)
+            elif manager == "dnf":
+                sudo.dnf.install(package, y=True)
+            elif manager == "yum":
+                sudo.yum.install(package, y=True)
             else:
-                install(package, y=True)
+                raise ValueError(f"unsupported package manager: {manager}")
             return
         except CommandError:
             logger.warning("editor package unavailable: %s", package)
     logger.warning("no editor package fallback could be installed")
+
+
+def install_rpm_packages(manager: str) -> None:
+    from lincl import sudo
+
+    if manager == "dnf":
+        sudo.dnf.install(*RPM_PACKAGES, y=True)
+    elif manager == "yum":
+        sudo.yum.install(*RPM_PACKAGES, y=True)
+    else:
+        raise ValueError(f"unsupported RPM package manager: {manager}")
 
 
 def install_mise(context: InstallContext) -> None:
@@ -375,8 +384,7 @@ def install_mise(context: InstallContext) -> None:
             "mise download",
         )
         target.parent.mkdir(parents=True, exist_ok=True)
-        sh.run(
-            installer,
+        configured_sh = sh.configure(
             execution=ExecutionOptions(
                 timeout=300,
                 env={
@@ -386,6 +394,7 @@ def install_mise(context: InstallContext) -> None:
                 },
             ),
         )
+        configured_sh(installer)
     if not target.is_file():
         raise RuntimeError("mise installer completed without creating mise")
 
@@ -540,27 +549,26 @@ def checkout_source(
     source: GitSource,
     destination: Path,
 ) -> None:
-    """Converge a Git checkout on its pinned commit."""
     if context.dry_run:
         logger.info("dry-run: checkout %s at %s", source.name, source.commit)
         return
     from lincl import git
 
-    execution = ExecutionOptions(timeout=300, cwd=destination)
+    configured_git = git.configure(
+        execution=ExecutionOptions(timeout=300, cwd=destination)
+    )
 
     if (destination / ".git").exists():
         try:
-            git.fetch.run(
+            configured_git.fetch(
                 "origin",
                 source.commit,
-                options={"depth": 1},
-                execution=execution,
+                depth=1,
             )
         except CommandError:
-            git.fetch.run(
+            configured_git.fetch(
                 "origin",
                 source.reference,
-                execution=execution,
             )
     else:
         git.clone(
@@ -568,20 +576,18 @@ def checkout_source(
             destination,
             no_checkout=True,
         )
-        git.fetch.run(
+        configured_git.fetch(
             "origin",
             source.commit,
-            options={"depth": 1},
-            execution=execution,
+            depth=1,
         )
-    git.checkout.run(
+    configured_git.checkout(
         source.commit,
-        options={"detach": True},
-        execution=execution,
+        detach=True,
     )
-    git.submodule.update.run(
-        options={"init": True, "recursive": True},
-        execution=execution,
+    configured_git.submodule.update(
+        init=True,
+        recursive=True,
     )
 
 

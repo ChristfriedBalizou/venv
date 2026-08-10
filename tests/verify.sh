@@ -16,7 +16,7 @@ test "$(readlink "$HOME/.config/nvim/init.vim")" = "$DOTFILES_REPO_ROOT/dotfiles
 
 test -x "$HOME/.local/bin/mise"
 test -x "$DOTFILES_REPO_ROOT/.venv/bin/python"
-test "$("$DOTFILES_REPO_ROOT/.venv/bin/python" -c 'import lincl; print(lincl.__version__)')" = "2.0.0"
+test "$("$DOTFILES_REPO_ROOT/.venv/bin/python" -c 'import lincl; print(lincl.__version__)')" = "3.0.0"
 test "$("$HOME/.local/bin/mise" --version | awk 'NR == 1 { print $1 }')" = "2026.7.13"
 test -d "$HOME/.oh-my-bash"
 test -f "$HOME/.bashrc.omb"

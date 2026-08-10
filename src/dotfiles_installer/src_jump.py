@@ -71,13 +71,14 @@ def fzf_match(candidates: list[Path], query: str) -> Path | None:
 
     candidate_text = "\n".join(str(candidate) for candidate in candidates)
     try:
-        result = fzf.configure(parser=first_path).run(
-            options={
-                "filter": query,
-                "select_1": True,
-                "exit_0": True,
-            },
+        configured_fzf = fzf.configure(
+            parser=first_path,
             execution=ExecutionOptions(input=candidate_text, timeout=30),
+        )
+        result = configured_fzf(
+            filter=query,
+            select_1=True,
+            exit_0=True,
         )
     except CommandError:
         return None

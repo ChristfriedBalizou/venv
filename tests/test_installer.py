@@ -58,7 +58,7 @@ def test_optional_git_is_resolved_by_lincl(
     assert "git unavailable" in caplog.text
 
 
-def test_fzf_clone_uses_public_lincl_subcommand_api(
+def test_fzf_clone_uses_public_lincl_command_chaining(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -90,7 +90,7 @@ def test_fzf_clone_uses_public_lincl_subcommand_api(
     ]
 
 
-def test_apt_install_uses_public_lincl_subcommands(
+def test_apt_install_uses_public_lincl_command_chaining(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

@@ -83,8 +83,8 @@ just clean-state  # remove dotfiles installer logs and backups
 
 Python dependencies are declared in `requirements.in` and
 `requirements-dev.in`, then hash-locked with `pip-tools`. The installer uses
-`lincl` 1.1.1 pinned to its immutable upstream commit because that release is not
-yet available from PyPI. Install a development environment with:
+`lincl` 3.0.0 is pinned to its immutable upstream commit. Install a development
+environment with:
 
 ```bash
 python3 -m venv .venv
@@ -114,7 +114,7 @@ justfile           # local command runner
 mise.toml          # tool versions and mise tasks
 mise.lock          # resolved mise tool artifacts and checksums
 dotfiles/          # files linked into $HOME
-src/dotfiles_installer/ # typed Python installer and lincl command adapter
+src/dotfiles_installer/ # typed Python installer using lincl commands
 requirements*.in  # direct runtime and development dependency inputs
 requirements*.txt # hash-pinned dependency lockfiles
 ```

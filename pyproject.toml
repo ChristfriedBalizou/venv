@@ -8,7 +8,7 @@ description = "Current-user development environment installer"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "lincl @ https://github.com/ChristfriedBalizou/lincl/archive/c9b3ae130df8009ea6f8fa8130c92d12a80ddf20.tar.gz",
+    "lincl @ https://github.com/ChristfriedBalizou/lincl/archive/371c23e8c46068098d5b0fd80df43a749ce194bc.tar.gz",
 ]
 dynamic = ["version"]
 
