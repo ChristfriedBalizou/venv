@@ -7,3 +7,8 @@
 lincl @ https://github.com/ChristfriedBalizou/lincl/archive/67e32543e07aedf54c192547899d07f223e8ceb1.tar.gz \
     --hash=sha256:6d97e4fab6b702de7532e75bc81912fadddb71fc7044b0eaf9a7a0f0dc7616cb
     # via -r requirements.in
+tomli==2.4.1 ; python_version < "3.11" \
+    --hash=sha256:0d85819802132122da43cb86656f8d1f8c6587d54ae7dcaf30e90533028b49fe
+    # via
+    #   -r requirements.in
+    #   lincl
