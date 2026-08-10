@@ -44,7 +44,7 @@ jobs:
       matrix:
         include:
           - system: Debian 12
-            image: debian:12-slim
+            image: debian:13-slim
           - system: Debian 13
             image: debian:13-slim
           - system: Ubuntu 22.04
