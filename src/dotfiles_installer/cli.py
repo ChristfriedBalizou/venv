@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> int:
-    """Install the environment and return a process exit status."""
     context = InstallContext.from_environment()
     configure_logging(context.state_dir)
     logger.info("starting current-user setup in %s", context.repo_root)

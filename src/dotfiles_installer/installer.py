@@ -77,7 +77,6 @@ class GitSource:
 
     @property
     def name(self) -> str:
-        """Return the repository basename without its Git suffix."""
         return self.repository.rsplit("/", 1)[-1].removesuffix(".git")
 
 
@@ -253,7 +252,6 @@ def extract_tar_archive(archive: Path, destination: Path) -> None:
 
 
 def create_workspace(context: InstallContext) -> None:
-    """Create the opinionated workspace hierarchy."""
     for relative_path in ("src", "src/data", "src/tools", "src/github.com"):
         context.create_directory(context.home / relative_path)
 
@@ -359,7 +357,6 @@ def install_first_editor(
 
 
 def install_mise(context: InstallContext) -> None:
-    """Install the pinned mise release for the current user."""
     target = context.home / ".local/bin/mise"
     if target.is_file() and os.access(target, os.X_OK):
         logger.info("mise already installed")
@@ -389,7 +386,6 @@ def install_mise(context: InstallContext) -> None:
 
 
 def install_tools(context: InstallContext) -> None:
-    """Install the versions declared by the repository mise configuration."""
     mise = context.home / ".local/bin/mise"
     if context.dry_run and not mise.exists():
         logger.info("dry-run: mise trust and install")
@@ -409,7 +405,6 @@ def install_tools(context: InstallContext) -> None:
 
 
 def configure_git(context: InstallContext) -> None:
-    """Configure the default Git editor when Git is installed."""
     try:
         from lincl import git
     except CommandNotFoundError:
@@ -420,7 +415,6 @@ def configure_git(context: InstallContext) -> None:
 
 
 def install_bash(context: InstallContext) -> None:
-    """Install Oh My Bash and persistent mise activation."""
     bashrc = context.home / ".bashrc.omb"
     oh_my_bash = context.home / ".oh-my-bash"
     git_command: CommandCallable[str] | None = None
@@ -460,7 +454,6 @@ def install_bash(context: InstallContext) -> None:
 
 
 def link_dotfiles(context: InstallContext) -> None:
-    """Link each managed dotfile into the current home directory."""
     mappings = (
         ("dotfiles/bash/.bashrc", ".bashrc"),
         ("dotfiles/bash/.bash_aliases", ".bash_aliases"),
@@ -474,7 +467,6 @@ def link_dotfiles(context: InstallContext) -> None:
 
 
 def install_fzf(context: InstallContext) -> None:
-    """Install fzf under HOME when no executable is already available."""
     try:
         from lincl import fzf
 
@@ -519,7 +511,6 @@ def install_fzf(context: InstallContext) -> None:
 
 
 def install_blesh(context: InstallContext) -> None:
-    """Install the pinned, checksummed ble.sh archive."""
     destination = context.home / ".local/share/blesh"
     version_file = destination / ".dotfiles-version"
     if (
@@ -610,7 +601,6 @@ def checkout_source(
 
 
 def install_vim(context: InstallContext) -> None:
-    """Install the pinned Vim runtime and plugins."""
     git_command: CommandCallable[str] | None = None
     if not context.dry_run:
         try:
@@ -644,7 +634,6 @@ def install_vim(context: InstallContext) -> None:
 
 
 def install(context: InstallContext) -> None:
-    """Run the complete, ordered current-user installation."""
     create_workspace(context)
     try:
         install_system_packages(context)

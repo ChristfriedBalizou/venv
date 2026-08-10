@@ -9,7 +9,6 @@ from dotfiles_installer.context import InstallContext
 
 
 def context_for(tmp_path: Path, dry_run: bool = False) -> InstallContext:
-    """Build an isolated installer context."""
     home = tmp_path / "home"
     home.mkdir()
     repo = tmp_path / "repo"

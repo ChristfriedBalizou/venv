@@ -27,7 +27,6 @@ class InstallContext:
 
     @classmethod
     def from_environment(cls) -> "InstallContext":
-        """Build a context from the documented installer environment."""
         repo_root = Path(
             os.environ.get(
                 "DOTFILES_REPO_ROOT",
@@ -52,19 +51,16 @@ class InstallContext:
 
     @property
     def backup_dir(self) -> Path:
-        """Return the backup directory for this installer invocation."""
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
         return self.state_dir / "backups" / timestamp
 
     def create_directory(self, directory: Path) -> None:
-        """Create a directory unless this is a preview."""
         if self.dry_run:
             logger.info("dry-run: mkdir -p %s", directory)
             return
         directory.mkdir(parents=True, exist_ok=True)
 
     def backup(self, target: Path) -> None:
-        """Move an existing path into the current backup tree."""
         if not target.exists() and not target.is_symlink():
             return
         try:
@@ -82,7 +78,6 @@ class InstallContext:
         logger.info("backed up %s", target)
 
     def link(self, source: Path, target: Path) -> None:
-        """Converge a target onto an absolute symlink to a repository file."""
         if not source.exists():
             raise FileNotFoundError(f"missing link source: {source}")
         if target.is_symlink() and target.readlink() == source:
@@ -97,7 +92,6 @@ class InstallContext:
         logger.info("linked %s", target)
 
     def append_once(self, path: Path, marker: str, content: str) -> None:
-        """Append a marked configuration block at most once."""
         if path.exists() and marker in path.read_text(encoding="utf-8"):
             logger.info("already configured %s", path)
             return

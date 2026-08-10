@@ -59,7 +59,6 @@ def prefix_match(candidates: list[Path], query: str) -> Path | None:
 
 
 def first_path(output: str) -> Path | None:
-    """Return the first path emitted by a selector."""
     lines = output.splitlines()
     return Path(lines[0]) if lines else None
 
@@ -148,7 +147,6 @@ def cd_jump(root: Path, queries: list[str]) -> int:
 
 
 def main() -> int:
-    """Parse command-line arguments and print the selected directory."""
     logging.basicConfig(
         level=logging.ERROR, format="%(levelname)s %(message)s"
     )
