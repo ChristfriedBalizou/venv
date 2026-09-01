@@ -4,7 +4,7 @@ black
 flake8
 isort
 pip-tools
-pip<26.2
+pip<26.3
 pre-commit
 pytest
 yesqa
